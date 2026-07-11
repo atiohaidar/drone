@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJI Mavic Mini Flight Dashboard & Simulator</title>
+    <meta name="description" content="Premium Real-time DJI Mavic Mini controller simulator and flight logger.">
+    
+    <!-- Remote Debugging Error Catcher -->
+    <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+        const errDiv = document.createElement('div');
+        errDiv.style.position = 'fixed';
+        errDiv.style.top = '10px';
+        errDiv.style.left = '10px';
+        errDiv.style.right = '10px';
+        errDiv.style.background = 'rgba(239, 68, 68, 0.95)';
+        errDiv.style.color = '#fff';
+        errDiv.style.padding = '15px';
+        errDiv.style.borderRadius = '8px';
+        errDiv.style.fontFamily = 'monospace';
+        errDiv.style.fontSize = '12px';
+        errDiv.style.zIndex = '999999';
+        errDiv.style.whiteSpace = 'pre-wrap';
+        errDiv.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+        errDiv.style.border = '2px solid #ef4444';
+        errDiv.innerText = `⚠️ BROWSER JS ERROR DETECTED:\n\nMessage: ${message}\nSource: ${source}\nLine: ${lineno}:${colno}\nStack: ${error ? error.stack : 'N/A'}`;
+        document.body.appendChild(errDiv);
+        return false;
+    };
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet JS & CSS for Peta -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Chart.js for Telemetry Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- App Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <h2>ANTIGRAVITY<span>DJI</span></h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" id="btn-tab-simulator" onclick="switchTab('simulator')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span>Input Visualizer</span>
+                </button>
+                <button class="nav-item" id="btn-tab-logbook" onclick="switchTab('logbook')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span>Flight Logbook</span>
+                </button>
+                <button class="nav-item" id="btn-tab-analytics" onclick="switchTab('analytics')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span>Analytics</span>
+                </button>
+                <button class="nav-item" style="border-top: 1px solid var(--glass-border); margin-top: 8px; padding-top: 12px; color: var(--primary);" id="btn-tab-challenge" onclick="window.open('challenge.html', '_blank')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--primary);">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <span>3D Obstacle Game</span>
+                </button>
+            </nav>
+            
+            <!-- Connection Widget -->
+            <div class="connection-widget">
+                <div class="widget-header">
+                    <span class="status-dot disconnected" id="conn-dot"></span>
+                    <span class="status-text" id="conn-text">Disconnected</span>
+                </div>
+                <div class="widget-body">
+                    <p class="widget-detail" id="conn-port">Port: None</p>
+                    <button class="btn btn-primary" id="btn-connect" onclick="toggleWebSocket()">Connect Bridge</button>
+                </div>
+            </div>
+            
+            <!-- Help Box -->
+            <div class="help-box">
+                <h4>Flight Controls</h4>
+                <div class="control-legend">
+                    <div><strong>Left Stick:</strong> Throttle / Yaw (W, S / A, D)</div>
+                    <div><strong>Right Stick:</strong> Pitch / Roll (Up, Down / Left, Right)</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Header bar -->
+            <header class="top-header">
+                <h1 id="page-title">Flight Simulator</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="loadDemoData()">Load Demo Logs</button>
+                    <div class="datetime" id="current-time">10 July 2026 21:28</div>
+                </div>
+            </header>
+
+            <!-- TAB 1: SIMULATOR -->
+            <section class="tab-content active" id="tab-simulator">
+                <div class="simulator-layout">
+                    <!-- Interactive Controller Live Input Visualizer Dashboard -->
+                    <div class="map-card card" id="controller-visualizer-container">
+                        <div class="visualizer-header">
+                            <span class="pulse-icon active" id="vis-pulse-dot"></span>
+                            <h2>DJI Controller Live Input Mapper & Command Visualizer</h2>
+                        </div>
+                        
+                        <div class="visualizer-content">
+                            <!-- Visual representation of physical sticks -->
+                            <div class="sticks-visualizer">
+                                <div class="stick-card">
+                                    <div class="stick-title">LEFT STICK (Yaw / Throttle)</div>
+                                    <div class="stick-area" id="vis-left-stick-area">
+                                        <div class="stick-axis-v"></div>
+                                        <div class="stick-axis-h"></div>
+                                        <div class="stick-dot" id="vis-left-stick-dot"></div>
+                                    </div>
+                                    <div class="stick-readout">
+                                        <div>T (Throttle): <span id="vis-val-throttle">0%</span></div>
+                                        <div>Y (Yaw): <span id="vis-val-yaw">0%</span></div>
+                                    </div>
+                                    <div class="stick-command" id="vis-cmd-left">Hovering (Stable Altitude)</div>
+                                </div>
+                                
+                                <div class="stick-card">
+                                    <div class="stick-title">RIGHT STICK (Roll / Pitch)</div>
+                                    <div class="stick-area" id="vis-right-stick-area">
+                                        <div class="stick-axis-v"></div>
+                                        <div class="stick-axis-h"></div>
+                                        <div class="stick-dot" id="vis-right-stick-dot"></div>
+                                    </div>
+                                    <div class="stick-readout">
+                                        <div>P (Pitch): <span id="vis-val-pitch">0%</span></div>
+                                        <div>R (Roll): <span id="vis-val-roll">0%</span></div>
+                                    </div>
+                                    <div class="stick-command" id="vis-cmd-right">Hovering (Zero Horizontal Speed)</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Real-time mapped commands mapping -->
+                            <div class="commands-mapping">
+                                <div class="mapping-title">LIVE SYSTEM COMMANDS & ACTIONS</div>
+                                <div class="mapping-grid">
+                                    <div class="mapping-row" id="row-throttle">
+                                        <span class="map-key">Throttle Command:</span>
+                                        <span class="map-val" id="act-throttle">Altitude Hold</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-yaw">
+                                        <span class="map-key">Yaw Command:</span>
+                                        <span class="map-val" id="act-yaw">Heading Lock</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-pitch">
+                                        <span class="map-key">Pitch Command:</span>
+                                        <span class="map-val" id="act-pitch">Pitch Neutral</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-roll">
+                                        <span class="map-key">Roll Command:</span>
+                                        <span class="map-val" id="act-roll">Roll Neutral</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-camera">
+                                        <span class="map-key">Gimbal Command:</span>
+                                        <span class="map-val" id="act-camera">Gimbal Level (0°)</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-rth">
+                                        <span class="map-key">Autopilot State:</span>
+                                        <span class="map-val" id="act-rth">Manual Control Mode</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-btn-c1">
+                                        <span class="map-key">Fn (C1) Button:</span>
+                                        <span class="map-val" id="vis-btn-c1">RELEASED</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-btn-shutter">
+                                        <span class="map-key">Shutter Button:</span>
+                                        <span class="map-val" id="vis-btn-shutter">RELEASED</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-btn-sport">
+                                        <span class="map-key">Sport/Pause Mode:</span>
+                                        <span class="map-val" id="vis-btn-sport">Normal Mode (OFF)</span>
+                                    </div>
+                                    <div class="mapping-row" id="row-vis-rc-bat">
+                                        <span class="map-key">RC Battery Level:</span>
+                                        <span class="map-val" id="vis-rc-bat">100% (Normal)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom Split Panel: Console Log + Real-time Graph -->
+                        <div class="visualizer-bottom-grid">
+                            <!-- Console Log -->
+                            <div class="console-log-area">
+                                <div class="console-header">
+                                    <span>LIVE TELEMETRY ACTIONS EVENT LOG</span>
+                                    <button onclick="clearConsoleLog()" class="btn btn-xs btn-secondary" style="font-size:0.65rem; padding: 2px 8px;">Clear Log</button>
+                                </div>
+                                <div class="console-lines" id="console-event-log">
+                                    <div class="console-line system">[SYSTEM] Ready. Turn on your DJI Controller and connect the bridge.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Real-time Chart -->
+                            <div class="realtime-chart-area">
+                                <div class="chart-header">
+                                    <span>REAL-TIME STICK CHANNELS GRAPH</span>
+                                </div>
+                                <div class="realtime-chart-wrapper">
+                                    <canvas id="vis-realtime-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="rth-overlay" id="rth-banner" style="display: none;">
+                            <span class="rth-icon">🔄</span>
+                            <span class="rth-text">RTH ACTIVE</span>
+                        </div>
+                        
+                        <!-- Flight Recorder Control Overlay -->
+                        <div class="map-controls">
+                            <button class="btn-circle" id="btn-record" onclick="toggleRecording()" title="Record Flight">
+                                <span class="record-icon"></span>
+                            </button>
+                            <span class="record-timer" id="record-timer" style="display:none;">00:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry HUD Panel (Right Side of Map) -->
+                    <div class="hud-panel">
+                        <!-- Primary Flight Instrument Dials -->
+                        <div class="card glass-card hud-primary">
+                            <h3>FLIGHT INSTRUMENTS</h3>
+                            <div class="hud-dials">
+                                <!-- Heading Compass -->
+                                <div class="dial-container">
+                                    <div class="dial compass-dial" id="hud-compass">
+                                        <div class="compass-pointer">▲</div>
+                                        <div class="compass-ring">
+                                            <span>N</span><span>E</span><span>S</span><span>W</span>
+                                        </div>
+                                    </div>
+                                    <span class="dial-label">HEADING</span>
+                                    <span class="dial-value" id="val-heading">0°</span>
+                                </div>
+                                
+                                <!-- Artificial Horizon Gimbals -->
+                                <div class="dial-container">
+                                    <div class="dial horizon-dial" id="hud-horizon">
+                                        <div class="horizon-sky-ground">
+                                            <div class="horizon-sky"></div>
+                                            <div class="horizon-ground"></div>
+                                        </div>
+                                        <div class="horizon-pitch-lines"></div>
+                                        <div class="horizon-fixed-ring">
+                                            <div class="horizon-plane"></div>
+                                        </div>
+                                    </div>
+                                    <span class="dial-label">GYRO ATTITUDE</span>
+                                    <span class="dial-value" id="val-gyro">P: 0° | R: 0°</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3D Drone Model Orientation Card -->
+                        <div class="card glass-card visual-3d-card">
+                            <h3>3D FLIGHT ORIENTATION</h3>
+                            <div class="stage-3d">
+                                <div class="drone-container" id="drone-3d">
+                                    <!-- Drone Body -->
+                                    <div class="drone-body"></div>
+                                    <!-- Front Indicators (Red LEDs) -->
+                                    <div class="drone-arm arm-front-left"><div class="rotor red-led"></div></div>
+                                    <div class="drone-arm arm-front-right"><div class="rotor red-led"></div></div>
+                                    <div class="drone-arm arm-back-left"><div class="rotor"></div></div>
+                                    <div class="drone-arm arm-back-right"><div class="rotor"></div></div>
+                                    <!-- Camera Gimbal -->
+                                    <div class="drone-camera" id="drone-camera-3d"></div>
+                                </div>
+                            </div>
+                            <div class="visual-legend">
+                                <span>Front (LEDs) Facing North</span>
+                            </div>
+                        </div>
+
+                        <!-- Numeric Telemetry Grid -->
+                        <div class="telemetry-grid">
+                            <div class="tele-card glass-card">
+                                <span class="lbl">ALTITUDE</span>
+                                <span class="val" id="tele-alt">0.0m</span>
+                            </div>
+                            <div class="tele-card glass-card">
+                                <span class="lbl">SPEED</span>
+                                <span class="val" id="tele-speed">0.0 m/s</span>
+                            </div>
+                            <div class="tele-card glass-card">
+                                <span class="lbl">DISTANCE</span>
+                                <span class="val" id="tele-dist">0.0m</span>
+                            </div>
+                            <div class="tele-card glass-card">
+                                <span class="lbl">GIMBAL PITCH</span>
+                                <span class="val" id="tele-gimbal">0°</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+            <!-- TAB 2: FLIGHT LOGBOOK -->
+            <section class="tab-content" id="tab-logbook">
+                <div class="logbook-layout">
+                    <!-- Left: Flight Log List -->
+                    <div class="logbook-list-panel card">
+                        <div class="panel-header">
+                            <h2>Saved Flights</h2>
+                            <div class="panel-actions">
+                                <label class="btn btn-secondary btn-file-upload">
+                                    Import CSV
+                                    <input type="file" id="csv-file-input" accept=".csv" onchange="importCSVFile(event)" style="display:none;">
+                                </label>
+                                <button class="btn btn-primary" onclick="showManualLogForm()">Manual Entry</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="logbook-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Pilot</th>
+                                        <th>Location</th>
+                                        <th>Duration</th>
+                                        <th>Max Alt</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- JavaScript populates this -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Flight Details & Chart Panel -->
+                    <div class="logbook-detail-panel">
+                        <!-- Instructions or Flight Details Card -->
+                        <div class="card detail-placeholder-card" id="detail-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <h3>No Flight Selected</h3>
+                            <p>Select a flight log from the list to view telemetry analysis, flight paths, and charts.</p>
+                        </div>
+
+                        <!-- Real Flight Details Card -->
+                        <div class="card log-details-card" id="log-details" style="display:none;">
+                            <div class="detail-header">
+                                <h2 id="detail-date">Flight details - 10 July 2026</h2>
+                                <button class="btn btn-danger btn-sm" id="btn-delete-log" onclick="deleteActiveLog()">Delete Log</button>
+                            </div>
+                            
+                            <div class="detail-stats-grid">
+                                <div class="detail-stat">
+                                    <span class="lbl">PILOT</span>
+                                    <span class="val" id="detail-pilot">-</span>
+                                </div>
+                                <div class="detail-stat">
+                                    <span class="lbl">LOCATION</span>
+                                    <span class="val" id="detail-location">-</span>
+                                </div>
+                                <div class="detail-stat">
+                                    <span class="lbl">AIRTIME</span>
+                                    <span class="val" id="detail-duration">-</span>
+                                </div>
+                                <div class="detail-stat">
+                                    <span class="lbl">MAX ALTITUDE</span>
+                                    <span class="val" id="detail-max-alt">-</span>
+                                </div>
+                                <div class="detail-stat">
+                                    <span class="lbl">MAX SPEED</span>
+                                    <span class="val" id="detail-max-speed">-</span>
+                                </div>
+                                <div class="detail-stat">
+                                    <span class="lbl">TOTAL DISTANCE</span>
+                                    <span class="val" id="detail-total-dist">-</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Telemetry Chart -->
+                            <div class="chart-container">
+                                <canvas id="telemetryChart"></canvas>
+                            </div>
+
+                            <!-- Flight Description / Notes -->
+                            <div class="detail-notes">
+                                <h4>Flight Notes</h4>
+                                <p id="detail-notes-text">No notes provided for this flight.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Entry Log Modal -->
+                <div class="modal" id="manual-log-modal">
+                    <div class="modal-content glass-card">
+                        <div class="modal-header">
+                            <h3>Manual Flight Log Entry</h3>
+                            <button class="close-modal" onclick="closeManualLogForm()">&times;</button>
+                        </div>
+                        <form id="manual-log-form" onsubmit="saveManualLog(event)">
+                            <div class="form-group">
+                                <label for="m-date">Date & Time</label>
+                                <input type="datetime-local" id="m-date" required>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="m-pilot">Pilot Name</label>
+                                    <input type="text" id="m-pilot" placeholder="e.g. John Doe" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="m-location">Location</label>
+                                    <input type="text" id="m-location" placeholder="e.g. Sentul Park" required>
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="m-duration">Flight Duration (seconds)</label>
+                                    <input type="number" id="m-duration" min="1" placeholder="e.g. 600" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="m-max-alt">Max Altitude (meters)</label>
+                                    <input type="number" id="m-max-alt" min="0" step="0.1" placeholder="e.g. 50" required>
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="m-max-speed">Max Speed (m/s)</label>
+                                    <input type="number" id="m-max-speed" min="0" step="0.1" placeholder="e.g. 8.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="m-distance">Total Distance (meters)</label>
+                                    <input type="number" id="m-distance" min="0" step="1" placeholder="e.g. 1200" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="m-notes">Notes / Observations</label>
+                                <textarea id="m-notes" rows="3" placeholder="Describe weather conditions, payload, or calibration info..."></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeManualLogForm()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Flight</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ANALYTICS -->
+            <section class="tab-content" id="tab-analytics">
+                <div class="analytics-layout">
+                    <!-- Stat Cards Grid -->
+                    <div class="analytics-grid">
+                        <div class="card glass-card stat-metric">
+                            <span class="title">TOTAL FLIGHTS</span>
+                            <span class="number" id="stat-total-flights">0</span>
+                            <span class="sub">Total flights recorded</span>
+                        </div>
+                        <div class="card glass-card stat-metric">
+                            <span class="title">TOTAL AIRTIME</span>
+                            <span class="number" id="stat-total-time">0h 0m</span>
+                            <span class="sub">Accumulated pilot experience</span>
+                        </div>
+                        <div class="card glass-card stat-metric">
+                            <span class="title">MAX ALTITUDE</span>
+                            <span class="number" id="stat-max-alt">0.0m</span>
+                            <span class="sub">Highest vertical flight peak</span>
+                        </div>
+                        <div class="card glass-card stat-metric">
+                            <span class="title">TOTAL MILEAGE</span>
+                            <span class="number" id="stat-total-dist">0.0 km</span>
+                            <span class="sub">Total ground distance covered</span>
+                        </div>
+                    </div>
+
+                    <!-- Charts Panel -->
+                    <div class="analytics-charts-grid">
+                        <div class="card char-card">
+                            <h3>FLIGHT DURATIONS HISTORY</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-analytics-durations"></canvas>
+                            </div>
+                        </div>
+                        <div class="card char-card">
+                            <h3>ALTITUDE VS SPEED HISTORICAL PEAKS</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-analytics-peaks"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- App Logic Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
