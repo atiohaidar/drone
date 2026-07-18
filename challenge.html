@@ -41,11 +41,11 @@
     <style>
         :root {
             --bg-color: #f8fafc;
-            --primary: #0284c7;
+            --primary: #0277af;
             --primary-glow: rgba(2, 132, 199, 0.3);
             --secondary: #db2777;
             --secondary-glow: rgba(219, 39, 119, 0.3);
-            --success: #16a34a;
+            --success: #15803d;
             --warning: #ea580c;
             --danger: #dc2626;
             --text-main: #0f172a;
@@ -278,6 +278,7 @@
             border: 2px solid rgba(15,23,42,0.05);
             background: rgba(255, 255, 255, 0.85);
             position: relative;
+            padding: 12px;
         }
 
         .telemetry-card::before {
@@ -346,7 +347,8 @@
             width: 100%;
             background: linear-gradient(90deg, var(--secondary), var(--primary));
             box-shadow: 0 0 10px var(--primary-glow);
-            transition: width 0.15s ease-out;
+            transform-origin: left;
+            transition: transform 0.15s ease-out;
         }
 
         /* Control Input Visualizer (Mini-Bars) */
@@ -673,7 +675,7 @@
 
             <!-- Right Controls Legend -->
             <div class="glass-panel legend-panel">
-                <h4>Controls Legend</h4>
+                <h2>Controls Legend</h2>
                 <div class="legend-row">
                     <span>Throttle (Climb/Desc)</span>
                     <span class="legend-key">W / S (Left Stick Y)</span>
@@ -713,7 +715,7 @@
             <div class="modal-stats" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
                 <div class="stat-item" style="text-align: center; border-right: 1px solid rgba(15, 23, 42, 0.05); padding-right: 10px;">
                     <span class="stat-lbl">Control Method</span>
-                    <span class="stat-val" id="control-detected" style="font-size: 0.95rem; line-height: 1.3;">Checking Connection...</span>
+                    <span class="stat-val" id="control-detected" style="font-size: 0.875rem; line-height: 1.3;">Checking Connection...</span>
                 </div>
                 <div class="stat-item" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-left: 10px;">
                     <span class="stat-lbl" style="margin-bottom: 6px;">Select Arena</span>
@@ -767,7 +769,7 @@
                     <span class="stat-val" id="vic-shield" style="color: var(--success);">100%</span>
                 </div>
             </div>
-            <button class="btn btn-primary btn-large" style="background: var(--success); border-color: var(--success); color: #000;" onclick="startGame()">Fly Again</button>
+            <button class="btn btn-primary btn-large" style="background: var(--success); border-color: var(--success); color: #fff;" onclick="startGame()">Fly Again</button>
         </div>
     </div>
 
@@ -2205,7 +2207,7 @@
 
             const healthFill = document.getElementById('health-fill');
             const healthPct = document.getElementById('health-pct');
-            healthFill.style.width = `${Math.max(0, shieldHealth)}%`;
+            healthFill.style.transform = `scaleX(${Math.max(0, shieldHealth) / 100})`;
             healthPct.innerText = `${Math.round(Math.max(0, shieldHealth))}%`;
 
             if (shieldHealth <= 0) {

@@ -3,11 +3,11 @@
 
 :root {
     --bg-color: #f8fafc;
-    --primary: #16a34a;
-    --primary-glow: rgba(22, 163, 74, 0.28);
+    --primary: #15803d;
+    --primary-glow: rgba(21, 128, 61, 0.28);
     --secondary: #db2777;
     --secondary-glow: rgba(219, 39, 119, 0.3);
-    --success: #16a34a;
+    --success: #15803d;
     --warning: #ea580c;
     --danger: #dc2626;
     --text-main: #0f172a;
@@ -252,6 +252,7 @@ body, html {
     background: rgba(255, 255, 255, 0.85);
     position: relative;
     overflow: hidden;
+    padding: 12px;
 }
 
 .telemetry-card::before {
@@ -328,7 +329,8 @@ body, html {
     width: 100%;
     background: linear-gradient(90deg, var(--secondary), var(--primary));
     box-shadow: 0 0 10px var(--primary-glow);
-    transition: width 0.15s ease-out;
+    transform-origin: left;
+    transition: transform 0.15s ease-out;
 }
 
 /* Control Input Visualizer (Mini-Bars) */

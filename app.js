@@ -1065,8 +1065,8 @@ function renderTelemetryChart(log) {
                 {
                     label: 'Altitude (m)',
                     data: altData,
-                    borderColor: 'rgb(6, 182, 212)', // Cyan
-                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    borderColor: 'rgb(2, 119, 175)',
+                    backgroundColor: 'rgba(2, 119, 175, 0.1)',
                     borderWidth: 2,
                     tension: 0.3,
                     yAxisID: 'y'
@@ -1074,8 +1074,8 @@ function renderTelemetryChart(log) {
                 {
                     label: 'Speed (km/h)',
                     data: speedData,
-                    borderColor: 'rgb(217, 70, 239)', // Purple
-                    backgroundColor: 'rgba(217, 70, 239, 0.1)',
+                    borderColor: 'rgb(139, 92, 246)',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
                     borderWidth: 2,
                     tension: 0.3,
                     yAxisID: 'y1'
@@ -1087,25 +1087,25 @@ function renderTelemetryChart(log) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    labels: { color: 'hsl(215, 20%, 65%)', font: { family: 'Outfit' } }
+                    labels: { color: 'hsl(215, 20%, 35%)', font: { family: 'Mulish' } }
                 }
             },
             scales: {
                 x: {
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                    ticks: { color: 'hsl(215, 20%, 65%)' }
+                    grid: { color: 'rgba(15, 23, 42, 0.06)' },
+                    ticks: { color: 'hsl(215, 20%, 35%)' }
                 },
                 y: {
                     position: 'left',
-                    title: { display: true, text: 'Altitude (m)', color: 'rgb(6, 182, 212)' },
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                    ticks: { color: 'hsl(215, 20%, 65%)' }
+                    title: { display: true, text: 'Altitude (m)', color: 'rgb(2, 119, 175)' },
+                    grid: { color: 'rgba(15, 23, 42, 0.06)' },
+                    ticks: { color: 'hsl(215, 20%, 35%)' }
                 },
                 y1: {
                     position: 'right',
-                    title: { display: true, text: 'Speed (km/h)', color: 'rgb(217, 70, 239)' },
+                    title: { display: true, text: 'Speed (km/h)', color: 'rgb(139, 92, 246)' },
                     grid: { drawOnChartArea: false }, // Avoid duplicate scales grid lines
-                    ticks: { color: 'hsl(215, 20%, 65%)' }
+                    ticks: { color: 'hsl(215, 20%, 35%)' }
                 }
             }
         }
@@ -1164,8 +1164,8 @@ function renderAnalyticsCharts() {
             datasets: [{
                 label: 'Airtime (Minutes)',
                 data: durations,
-                backgroundColor: 'rgba(6, 182, 212, 0.4)',
-                borderColor: 'rgb(6, 182, 212)',
+                backgroundColor: 'rgba(2, 119, 175, 0.4)',
+                borderColor: 'rgb(2, 119, 175)',
                 borderWidth: 2,
                 borderRadius: 6
             }]
@@ -1177,8 +1177,8 @@ function renderAnalyticsCharts() {
                 legend: { display: false }
             },
             scales: {
-                x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: 'hsl(215, 20%, 65%)' } },
-                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: 'hsl(215, 20%, 65%)' } }
+                x: { grid: { color: 'rgba(15, 23, 42, 0.06)' }, ticks: { color: 'hsl(215, 20%, 35%)' } },
+                y: { grid: { color: 'rgba(15, 23, 42, 0.06)' }, ticks: { color: 'hsl(215, 20%, 35%)' } }
             }
         }
     });
@@ -1192,7 +1192,7 @@ function renderAnalyticsCharts() {
                 {
                     label: 'Max Altitude (m)',
                     data: altitudes,
-                    borderColor: 'rgb(6, 182, 212)',
+                    borderColor: 'rgb(2, 119, 175)',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     tension: 0.1
@@ -1200,7 +1200,7 @@ function renderAnalyticsCharts() {
                 {
                     label: 'Max Speed (km/h)',
                     data: speeds,
-                    borderColor: 'rgb(217, 70, 239)',
+                    borderColor: 'rgb(139, 92, 246)',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     tension: 0.1
@@ -1211,11 +1211,11 @@ function renderAnalyticsCharts() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: 'hsl(215, 20%, 65%)' } }
+                legend: { labels: { color: 'hsl(215, 20%, 35%)' } }
             },
             scales: {
-                x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: 'hsl(215, 20%, 65%)' } },
-                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: 'hsl(215, 20%, 65%)' } }
+                x: { grid: { color: 'rgba(15, 23, 42, 0.06)' }, ticks: { color: 'hsl(215, 20%, 35%)' } },
+                y: { grid: { color: 'rgba(15, 23, 42, 0.06)' }, ticks: { color: 'hsl(215, 20%, 35%)' } }
             }
         }
     });
@@ -1350,7 +1350,7 @@ function initRealtimeChart() {
             datasets: [
                 {
                     label: 'Throttle',
-                    borderColor: '#22c55e', // Green
+                    borderColor: '#15803d',
                     backgroundColor: 'transparent',
                     borderWidth: 1.5,
                     pointRadius: 0,
@@ -1359,7 +1359,7 @@ function initRealtimeChart() {
                 },
                 {
                     label: 'Yaw',
-                    borderColor: '#eab308', // Yellow
+                    borderColor: '#ea580c',
                     backgroundColor: 'transparent',
                     borderWidth: 1.5,
                     pointRadius: 0,
@@ -1368,7 +1368,7 @@ function initRealtimeChart() {
                 },
                 {
                     label: 'Pitch',
-                    borderColor: '#06b6d4', // Cyan
+                    borderColor: '#0277af',
                     backgroundColor: 'transparent',
                     borderWidth: 1.5,
                     pointRadius: 0,
@@ -1377,7 +1377,7 @@ function initRealtimeChart() {
                 },
                 {
                     label: 'Roll',
-                    borderColor: '#ec4899', // Pink
+                    borderColor: '#8b5cf6',
                     backgroundColor: 'transparent',
                     borderWidth: 1.5,
                     pointRadius: 0,
@@ -1394,10 +1394,10 @@ function initRealtimeChart() {
                 legend: {
                     display: true,
                     labels: {
-                        color: 'rgba(255, 255, 255, 0.6)',
+                        color: 'rgba(15, 23, 42, 0.6)',
                         boxWidth: 8,
                         boxHeight: 8,
-                        font: { size: 9, family: 'Inter' }
+                        font: { size: 9, family: 'Mulish' }
                     }
                 }
             },
@@ -1409,10 +1409,10 @@ function initRealtimeChart() {
                     min: -1.1,
                     max: 1.1,
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
+                        color: 'rgba(15, 23, 42, 0.06)'
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.4)',
+                        color: 'rgba(15, 23, 42, 0.4)',
                         font: { size: 8 }
                     }
                 }

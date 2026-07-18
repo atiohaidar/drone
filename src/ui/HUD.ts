@@ -74,7 +74,7 @@ export class HUD {
   public updateShieldHealth(shieldHealth: number): void {
     const health = Math.max(0, shieldHealth);
     if (this.healthFill) {
-      this.healthFill.style.width = `${health}%`;
+      this.healthFill.style.transform = `scaleX(${health / 100})`;
     }
     if (this.healthPct) {
       this.healthPct.innerText = `${Math.round(health)}%`;
