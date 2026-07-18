@@ -380,6 +380,7 @@ body {
     backdrop-filter: blur(10px);
 }
 
+
 .btn-circle {
     width: 36px;
     height: 36px;
@@ -435,7 +436,7 @@ body {
     flex-shrink: 0;
 }
 
-.hud-panel h3, .input-diagnostics h3, .char-card h3 {
+.hud-panel h3, .input-diagnostics h3, .chart-panel h3 {
     font-family: var(--font-heading);
     font-size: 0.75rem;
     letter-spacing: 1.5px;
@@ -535,7 +536,7 @@ body {
 
 .horizon-sky {
     height: 50%;
-    background: linear-gradient(to bottom, #0ea5e9, #38bdf8);
+    background: linear-gradient(to bottom, #002e9c, #316ac5);
 }
 
 .horizon-ground {
@@ -683,24 +684,23 @@ body {
     gap: 12px;
 }
 
-.tele-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-glass);
-    border-radius: 14px;
-    padding: 12px;
+.tele-panel {
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.tele-card .lbl {
+.tele-panel .lbl {
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.3px;
 }
 
-.tele-card .val {
+.tele-panel .val {
     font-family: var(--font-heading);
     font-size: 1.2rem;
     font-weight: 800;
@@ -736,8 +736,8 @@ body {
     width: 100px;
     height: 100px;
     border-radius: 12px;
-    border: 1px solid var(--border-glass);
-    background: rgba(15, 23, 42, 0.04);
+    border: none;
+    background: transparent;
     position: relative;
 }
 
@@ -938,10 +938,11 @@ body {
 }
 
 .detail-stat {
-    border: 1px solid var(--border-glass);
-    background: rgba(15, 23, 42, 0.02);
-    border-radius: 12px;
-    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid var(--border-glass);
+    border-radius: 0;
+    padding: 6px 0;
     display: flex;
     flex-direction: column;
 }
@@ -979,10 +980,10 @@ body {
     font-size: 0.85rem;
     color: var(--text-muted);
     line-height: 1.4;
-    background: rgba(15, 23, 42, 0.01);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 6px 0;
 }
 
 /* Modals */
@@ -1128,7 +1129,7 @@ body {
     min-height: 320px;
 }
 
-.char-card {
+.chart-panel {
     display: flex;
     flex-direction: column;
     min-height: 320px;
@@ -1256,12 +1257,12 @@ body {
     flex: 1.2;
 }
 
-.sticks-visualizer > .stick-card:first-child {
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+.sticks-visualizer > .stick-panel:first-child {
+    border-right: 1px solid var(--border-glass);
     padding-right: 20px;
 }
 
-.stick-card {
+.stick-panel {
     flex: 1;
     background: transparent;
     border: none;
@@ -1339,20 +1340,20 @@ body {
 }
 
 .stick-readout span {
-    color: #fff;
+    color: var(--text-primary);
     font-weight: 600;
 }
 
 .stick-command {
     width: 100%;
-    background: rgba(15, 23, 42, 0.04);
-    border: 1px solid var(--border-glass);
-    border-radius: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     color: var(--text-primary);
     font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
-    padding: 8px 12px;
+    padding: 6px 0;
     letter-spacing: 0.5px;
     min-height: 28px;
     display: flex;
@@ -1416,7 +1417,7 @@ body {
 
 .map-val {
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .mapping-row.active .map-val {
@@ -1493,7 +1494,7 @@ body {
 }
 
 .console-line.action {
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .console-line.warning {
@@ -1506,8 +1507,8 @@ body {
 
 /* Realtime Chart Area styling */
 .realtime-chart-area {
-    background: #030712;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid var(--border-glass);
     border-radius: 8px;
     padding: 12px;
     display: flex;
@@ -1519,11 +1520,11 @@ body {
 
 .chart-header {
     font-family: var(--font-heading);
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-glass);
     padding-bottom: 6px;
 }
 
@@ -1538,4 +1539,359 @@ body {
 .realtime-chart-wrapper canvas {
     width: 100% !important;
     height: 100% !important;
+}
+
+/* ==============================================================
+   WINDOWS 95/98 CLASSIC TEAL THEME OVERRIDES
+   ============================================================== */
+
+:root {
+    --text-muted: #333333 !important;
+    --text-primary: #000000 !important;
+    --accent-cyan: #000080 !important;
+    --accent-red: #808080 !important; /* Neutralize dark-glow warning on red */
+    --warning: #808080 !important;
+}
+
+/* Remove all backdrop blurs and glowing shadows globally */
+html {
+    background-color: #808080 !important; /* Classic Slate Gray */
+}
+
+* {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important; /* Globally disable dark-glow shadow warnings */
+}
+
+/* Windows 95 Classic Desktop */
+body {
+    background: #808080 !important;
+    font-family: 'Tahoma', 'MS Sans Serif', sans-serif !important;
+    color: #000000 !important;
+}
+
+/* Sidebar Task Pane as a beveled left toolbar */
+.sidebar {
+    background-color: #c0c0c0 !important; /* MS Silver */
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    padding: 12px;
+    width: 220px !important;
+    flex-shrink: 0 !important;
+}
+
+/* HUD Panel (Right Side) */
+.hud-panel {
+    width: 300px !important;
+    flex-shrink: 0 !important;
+}
+
+.brand {
+    border-bottom: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.brand h2 {
+    color: #000000 !important;
+    font-weight: bold;
+    font-family: 'Tahoma', sans-serif;
+}
+
+/* Sidebar widget sections styled as recessed boxes */
+.nav-menu, .connection-widget, .help-box {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important; /* Recessed bevel */
+    padding: 8px !important;
+    margin-top: 15px;
+    border-radius: 0 !important;
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    border-radius: 0 !important;
+    color: #000000 !important;
+    font-size: 0.85rem;
+    font-weight: normal;
+    padding: 6px 8px;
+    margin-bottom: 2px;
+}
+
+.nav-item:hover {
+    background: #000080 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.nav-item.active {
+    background: #000080 !important;
+    color: #ffffff !important;
+}
+
+.nav-item.active span {
+    background: #000080 !important;
+    color: #ffffff !important;
+}
+
+.nav-item.active svg {
+    stroke: #ffffff !important;
+    background: #000080 !important;
+}
+
+.connection-widget .widget-header, .help-box h3 {
+    background: #000080 !important; /* MS Navy Title bar */
+    color: #ffffff !important;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 3px 6px;
+    border-bottom: none !important;
+}
+
+.connection-widget .widget-header span {
+    background: #000080 !important;
+    color: #ffffff !important;
+}
+
+.connection-widget .widget-body, .help-box .control-legend {
+    padding: 8px;
+    background: transparent !important;
+    color: #000000 !important;
+}
+
+/* RTH Warning Bar styled like Windows warning popup bar */
+.rth-overlay {
+    background: #ffffe1 !important;
+    border: 1px solid #000000 !important;
+    color: #000000 !important;
+}
+
+/* Main Content Area */
+.main-content {
+    background: transparent;
+}
+
+/* top header bar as a retro status frame */
+.top-header {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    padding: 6px 12px;
+    color: #000000 !important;
+    margin-bottom: 20px;
+    text-shadow: none !important;
+}
+
+.top-header h1 {
+    font-size: 1.15rem;
+    font-weight: bold;
+}
+
+.top-header .datetime {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    color: #000000 !important;
+    padding: 2px 6px;
+    font-family: monospace;
+}
+
+/* Cards as Windows 95 Windows with 3D double borders */
+.card {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    padding: 12px !important;
+    position: relative !important;
+    margin-top: 20px;
+    border-radius: 0 !important;
+}
+
+/* Windows 95 title bars styled directly on actual header elements as flow block */
+.visualizer-header, .panel-header, .detail-header, .modal-header, .card > h3 {
+    position: relative !important;
+    background: transparent !important; /* Transparent background */
+    color: #000080 !important;
+    border: none !important;
+    margin: 0 0 16px 0 !important;
+    padding: 0 0 4px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    border-bottom: 2px solid #000080 !important; /* Classic Navy Underline */
+}
+
+/* Ensure all title texts inside headers are navy with high contrast */
+.visualizer-header h2, .panel-header h2, .detail-header h2, .modal-header h3, .card > h3 {
+    color: #000080 !important;
+    font-size: 1.05rem !important;
+    font-weight: bold !important;
+    font-family: 'Tahoma', sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    text-transform: none !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: none !important;
+}
+
+/* Modals styled like Windows 95 dialog popups */
+.modal-content {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    padding: 16px !important;
+    position: relative !important;
+    border-radius: 0 !important;
+}
+
+.close-modal {
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    border-radius: 0 !important;
+    color: #000000 !important;
+    font-weight: bold;
+    font-size: 0.75rem;
+    padding: 0px 4px;
+    cursor: pointer;
+    z-index: 10;
+}
+.close-modal:hover {
+    background: #dfdfdf !important;
+}
+.close-modal:active {
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+}
+
+/* Windows 95 Beveled buttons */
+.btn {
+    border-radius: 0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 0.8rem;
+    font-weight: normal;
+    padding: 4px 12px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #dfdfdf !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    transform: none !important;
+}
+
+.btn:active {
+    border-color: #808080 #ffffff #ffffff #808080 !important; /* Pressed state */
+    padding: 5px 11px 3px 13px; /* visual push text */
+}
+
+.btn-primary {
+    background: #c0c0c0 !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    color: #000000 !important;
+    font-weight: bold !important; /* Default action indicator */
+    outline: 1px dotted #000000 !important;
+    outline-offset: -4px !important;
+}
+
+.btn-danger {
+    background: #c0c0c0 !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    color: #a00000 !important;
+}
+
+/* Recessed elements */
+.dial, .stick-area, .commands-mapping, .console-log-area, .realtime-chart-area, .map-controls {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important; /* Recessed borders */
+    box-shadow: inset 1px 1px 0px #000000 !important;
+    border-radius: 0 !important;
+}
+
+.dial-value {
+    color: #000080 !important;
+    font-family: monospace;
+}
+
+/* ListView Table Header - retro listbox headers */
+.data-table th {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    color: #000000 !important;
+    padding: 4px 8px !important;
+}
+
+/* Form inputs styled as MS recessed text fields */
+.form-group input, .form-group select, .form-group textarea {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    border-radius: 0 !important;
+    box-shadow: inset 1px 1px 0px #000000 !important;
+    color: #000000 !important;
+}
+
+/* Fix text size and letter-spacing for legends & mappings */
+.visual-legend {
+    font-size: 0.85rem !important;
+    letter-spacing: normal !important;
+}
+
+.mapping-title {
+    font-size: 0.85rem !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Telemetry Status Bar style on dashboard to match the simulator */
+.telemetry-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+.tele-panel {
+    display: flex !important;
+    flex-direction: column !important; /* Stack label above value */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important; /* Beveled */
+    border-radius: 0 !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+}
+
+.tele-panel .lbl {
+    font-size: 0.75rem !important;
+    font-weight: bold !important;
+    color: #333333 !important;
+    margin-bottom: 0 !important;
+    text-transform: uppercase !important;
+}
+
+.tele-panel .val {
+    font-size: 1.05rem !important;
+    color: #000080 !important;
+    margin-top: 0 !important;
+    font-family: monospace !important;
 }

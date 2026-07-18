@@ -43,7 +43,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- App Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
     <div class="app-container">
@@ -137,7 +137,7 @@
                         <div class="visualizer-content">
                             <!-- Visual representation of physical sticks -->
                             <div class="sticks-visualizer">
-                                <div class="stick-card">
+                                <div class="stick-panel">
                                     <div class="stick-title">LEFT STICK (Yaw / Throttle)</div>
                                     <div class="stick-area" id="vis-left-stick-area">
                                         <div class="stick-axis-v"></div>
@@ -151,7 +151,7 @@
                                     <div class="stick-command" id="vis-cmd-left">Hovering (Stable Altitude)</div>
                                 </div>
                                 
-                                <div class="stick-card">
+                                <div class="stick-panel">
                                     <div class="stick-title">RIGHT STICK (Roll / Pitch)</div>
                                     <div class="stick-area" id="vis-right-stick-area">
                                         <div class="stick-axis-v"></div>
@@ -255,7 +255,7 @@
                     <!-- Telemetry HUD Panel (Right Side of Map) -->
                     <div class="hud-panel">
                         <!-- Primary Flight Instrument Dials -->
-                        <div class="card glass-card hud-primary">
+                        <div class="card hud-primary">
                             <h3>FLIGHT INSTRUMENTS</h3>
                             <div class="hud-dials">
                                 <!-- Heading Compass -->
@@ -289,7 +289,7 @@
                         </div>
 
                         <!-- 3D Drone Model Orientation Card -->
-                        <div class="card glass-card visual-3d-card">
+                        <div class="card visual-3d-card">
                             <h3>3D FLIGHT ORIENTATION</h3>
                             <div class="stage-3d">
                                 <div class="drone-container" id="drone-3d">
@@ -309,27 +309,26 @@
                             </div>
                         </div>
 
-                        <!-- Numeric Telemetry Grid -->
                         <div class="telemetry-grid">
-                            <div class="tele-card glass-card">
+                            <div class="tele-panel">
                                 <span class="lbl">ALTITUDE</span>
                                 <span class="val" id="tele-alt">0.0m</span>
                             </div>
-                            <div class="tele-card glass-card">
+                            <div class="tele-panel">
                                 <span class="lbl">SPEED</span>
                                 <span class="val" id="tele-speed">0.0 m/s</span>
                             </div>
-                            <div class="tele-card glass-card">
+                            <div class="tele-panel">
                                 <span class="lbl">DISTANCE</span>
                                 <span class="val" id="tele-dist">0.0m</span>
                             </div>
-                            <div class="tele-card glass-card">
+                            <div class="tele-panel">
                                 <span class="lbl">GIMBAL PITCH</span>
                                 <span class="val" id="tele-gimbal">0°</span>
                             </div>
-                            <div class="tele-card glass-card">
+                            <div class="tele-panel">
                                 <span class="lbl">MODE</span>
-                                <span class="val" id="tele-mode" style="color:#00ffcc">P MODE</span>
+                                <span class="val" id="tele-mode" style="color:#004ebd">P MODE</span>
                             </div>
                         </div>
                     </div>
@@ -435,7 +434,7 @@
 
                 <!-- Manual Entry Log Modal -->
                 <div class="modal" id="manual-log-modal">
-                    <div class="modal-content glass-card">
+                    <div class="modal-content">
                         <div class="modal-header">
                             <h3>Manual Flight Log Entry</h3>
                             <button class="close-modal" onclick="closeManualLogForm()">&times;</button>
@@ -493,22 +492,22 @@
                 <div class="analytics-layout">
                     <!-- Stat Cards Grid -->
                     <div class="analytics-grid">
-                        <div class="card glass-card stat-metric">
+                        <div class="card stat-metric">
                             <span class="title">TOTAL FLIGHTS</span>
                             <span class="number" id="stat-total-flights">0</span>
                             <span class="sub">Total flights recorded</span>
                         </div>
-                        <div class="card glass-card stat-metric">
+                        <div class="card stat-metric">
                             <span class="title">TOTAL AIRTIME</span>
                             <span class="number" id="stat-total-time">0h 0m</span>
                             <span class="sub">Accumulated pilot experience</span>
                         </div>
-                        <div class="card glass-card stat-metric">
+                        <div class="card stat-metric">
                             <span class="title">MAX ALTITUDE</span>
                             <span class="number" id="stat-max-alt">0.0m</span>
                             <span class="sub">Highest vertical flight peak</span>
                         </div>
-                        <div class="card glass-card stat-metric">
+                        <div class="card stat-metric">
                             <span class="title">TOTAL MILEAGE</span>
                             <span class="number" id="stat-total-dist">0.0 km</span>
                             <span class="sub">Total ground distance covered</span>
@@ -517,13 +516,13 @@
 
                     <!-- Charts Panel -->
                     <div class="analytics-charts-grid">
-                        <div class="card char-card">
+                        <div class="card chart-panel">
                             <h3>FLIGHT DURATIONS HISTORY</h3>
                             <div class="chart-wrapper">
                                 <canvas id="chart-analytics-durations"></canvas>
                             </div>
                         </div>
-                        <div class="card char-card">
+                        <div class="card chart-panel">
                             <h3>ALTITUDE VS SPEED HISTORICAL PEAKS</h3>
                             <div class="chart-wrapper">
                                 <canvas id="chart-analytics-peaks"></canvas>

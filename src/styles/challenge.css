@@ -550,3 +550,267 @@ body, html {
     pointer-events: none;
     transition: opacity 0.1s ease-out;
 }
+
+/* ==============================================================
+   WINDOWS 95/98 RETRO CLASSIC OVERRIDES
+   ============================================================== */
+
+:root {
+    --text-muted: #333333 !important;
+    --text-main: #000000 !important;
+    --primary: #000080 !important;
+}
+
+/* Remove backdrop blur */
+* {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body, html {
+    background-color: #808080 !important; /* Classic Slate Gray */
+    font-family: 'Tahoma', 'MS Sans Serif', sans-serif !important;
+    color: #000000 !important;
+}
+
+/* Glass panel boxes styled as MS Silver beveled dialog windows (semi-transparent) */
+.glass-panel, .legend-panel, .health-container {
+    background: rgba(192, 192, 192, 0.85) !important; /* Semi-transparent MS Silver */
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    box-shadow: 1px 1px 0px 1px #000000, inset 1px 1px 0px 1px #dfdfdf !important;
+    border-radius: 0 !important;
+    color: #000000 !important;
+}
+
+/* Compact Brand Section */
+.brand-section {
+    padding: 6px 12px !important;
+}
+.brand-section p {
+    display: none !important; /* Hide flavor text to save space */
+}
+.connection-status {
+    margin-top: 2px !important;
+}
+
+/* Compact & Horizontal Game Tracker (Gate HUD) */
+.game-tracker {
+    flex-direction: row !important; /* Horizontal layout */
+    align-items: center !important;
+    min-width: auto !important;
+    gap: 15px !important;
+    padding: 6px 12px !important;
+}
+.checkpoint-title {
+    display: none !important; /* Hide self-explanatory header */
+}
+.checkpoint-value {
+    margin-bottom: 0 !important;
+}
+.timer-value {
+    margin-bottom: 0 !important;
+}
+
+/* Compact & Horizontal Top Right Panel */
+.top-right-panel {
+    flex-direction: row !important; /* Horizontal button layout */
+    gap: 8px !important;
+}
+.top-right-panel .btn {
+    padding: 4px 8px !important;
+}
+
+/* Telemetry panel and card status bar styling */
+.telemetry-panel {
+    display: flex !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    gap: 8px !important;
+    align-items: flex-end !important;
+}
+
+.telemetry-card {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal layout */
+    align-items: center !important;
+    gap: 8px !important;
+    background: rgba(192, 192, 192, 0.85) !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important; /* Beveled */
+    border-radius: 0 !important;
+    height: 32px !important;
+    width: auto !important;
+    padding: 4px 12px !important;
+    margin: 0 !important;
+}
+
+/* Remove circular conic progress dial layout for Windows 95 retro realism */
+.telemetry-card::before, .telemetry-card::after {
+    display: none !important;
+}
+
+.telemetry-label {
+    color: #333333 !important; /* High contrast dark grey */
+    font-weight: bold !important;
+    font-size: 0.75rem !important;
+}
+
+.telemetry-val {
+    color: #000080 !important; /* Navy */
+    font-size: 1.2rem !important;
+    font-family: 'Share Tech Mono', monospace !important;
+}
+
+.telemetry-unit {
+    color: #333333 !important;
+    font-weight: bold !important;
+    font-size: 0.75rem !important;
+    margin-left: -4px !important;
+}
+
+/* Buttons styled as MS Silver beveled rectangular items */
+.btn {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    border-radius: 0 !important;
+    color: #000000 !important;
+    font-family: 'Tahoma', sans-serif !important;
+    font-weight: normal !important;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+.btn:hover {
+    background: #dfdfdf !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn:active {
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+}
+
+.btn.active {
+    background: #c0c0c0 !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
+.btn-primary {
+    font-weight: bold !important;
+    outline: 1px dotted #000000 !important;
+    outline-offset: -4px !important;
+}
+
+.btn-danger {
+    color: #a00000 !important;
+}
+
+/* Shield/Health Bar recessed track */
+.health-bar-bg {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    box-shadow: inset 1px 1px 0px #000000 !important;
+    border-radius: 0 !important;
+    height: 12px !important;
+}
+
+.health-bar-fill {
+    background: #000080 !important; /* Solid Navy Blue fill */
+    box-shadow: none !important;
+}
+
+/* Input sliders tracks */
+.input-track {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    border-radius: 0 !important;
+    height: 12px !important;
+}
+
+.input-fill {
+    background: #000080 !important;
+}
+
+/* Brand Section title bar accent */
+.brand-section h1 span {
+    color: #ffffff !important;
+    background: #000080 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-size: 0.78rem !important;
+}
+
+.checkpoint-value {
+    color: #000080 !important;
+}
+
+.legend-key {
+    color: #000080 !important;
+}
+
+/* Overlay Screen Modal Box styled as a complete Windows 95 popup box */
+.screen-overlay {
+    background: rgba(0, 128, 128, 0.9) !important; /* Semi-transparent teal */
+}
+
+.modal-card {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    box-shadow: 2px 2px 0px 1px #000000, inset 1px 1px 0px 1px #dfdfdf !important;
+    padding: 16px !important;
+    border-radius: 0 !important;
+    color: #000000 !important;
+}
+
+.modal-card::before {
+    display: none !important;
+}
+
+.modal-logo {
+    display: none !important;
+}
+
+.modal-title {
+    color: #000080 !important;
+    font-size: 1.25rem !important;
+    font-weight: bold !important;
+    font-family: 'Tahoma', sans-serif !important;
+    border-bottom: 2px solid #000080 !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 12px !important;
+    text-align: left !important;
+    width: 100% !important;
+}
+
+.modal-title span {
+    color: #000080 !important;
+}
+
+.modal-desc {
+    color: #000000 !important;
+    font-size: 0.85rem !important;
+    margin-top: 10px !important;
+    text-align: left !important;
+}
+
+.modal-stats {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-color: #808080 #ffffff #ffffff #808080 !important;
+    box-shadow: inset 1px 1px 0px #000000 !important;
+    border-radius: 0 !important;
+    color: #000000 !important;
+}
+
+.stat-val {
+    color: #000080 !important;
+}
