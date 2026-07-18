@@ -8,12 +8,14 @@ import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
 import { DirectionalLight } from '@babylonjs/core/Lights/directionalLight';
 import { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import { Vector3, Color3, Color4 } from '@babylonjs/core/Maths/math';
+import { Viewport } from '@babylonjs/core/Maths/math.viewport';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
 export interface SceneContext {
   engine: Engine;
   scene: Scene;
   camera: FreeCamera;
+  pipCamera: FreeCamera;
   hemisphericLight: HemisphericLight;
   dirLight: DirectionalLight;
   keyLight: DirectionalLight;
@@ -41,6 +43,17 @@ export function buildScene(canvas: HTMLCanvasElement): SceneContext {
   camera.maxZ = 1000;
   // Detach default camera controls — we handle input manually
   camera.detachControl();
+
+  // PiP Camera
+  const pipCamera = new FreeCamera('pipCamera', new Vector3(0, 0, 0), scene);
+  pipCamera.fov = 60 * (Math.PI / 180);
+  pipCamera.minZ = 0.1;
+  pipCamera.maxZ = 1000;
+  pipCamera.viewport = new Viewport(0.02, 0.15, 0.25, 0.25);
+  pipCamera.detachControl();
+
+  // Enable multi-camera
+  scene.activeCameras = [camera, pipCamera];
 
   // Hemispheric light (ambient fill)
   const hemisphericLight = new HemisphericLight('ambient', new Vector3(0, 1, 0), scene);
@@ -71,5 +84,5 @@ export function buildScene(canvas: HTMLCanvasElement): SceneContext {
     engine.resize();
   });
 
-  return { engine, scene, camera, hemisphericLight, dirLight, keyLight, shadowGenerator };
+  return { engine, scene, camera, pipCamera, hemisphericLight, dirLight, keyLight, shadowGenerator };
 }

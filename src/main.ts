@@ -64,10 +64,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const physics = new DronePhysics();
   const hud = new HUD();
   const collisionSystem = new CollisionSystem(sceneCtx.scene);
-  const cameraController = new CameraController(sceneCtx.camera);
+  const cameraController = new CameraController(sceneCtx.camera, sceneCtx.pipCamera);
 
   // 2. Build drone model
   const droneModel = buildDroneModel(sceneCtx.scene, sceneCtx.shadowGenerator);
+  if (droneModel.root) {
+    droneModel.root.getChildMeshes(false).forEach(mesh => {
+      mesh.layerMask = 0x1;
+    });
+  }
 
   // 3. Environment building helper
   function loadEnvironment(env: 'outdoor' | 'indoor') {
