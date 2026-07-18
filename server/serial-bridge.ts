@@ -206,16 +206,16 @@ export class DjiBridge extends EventEmitter {
           // Parse stick positions
           if (data.length === 38) {
             this.state.pitch = parseInput(data, 16);
-            this.state.roll = -parseInput(data, 13);
+            this.state.roll = parseInput(data, 13);
             this.state.throttle = parseInput(data, 19);
-            this.state.yaw = -parseInput(data, 22);
+            this.state.yaw = parseInput(data, 22);
             this.state.camera = parseInput(data, 25);
             changed = true;
           } else if (data.length === 21 && pktCmdId === 0x26) {
-            this.state.roll = -parseInput(data, 11);
+            this.state.roll = parseInput(data, 11);
             this.state.pitch = parseInput(data, 13);
             this.state.throttle = parseInput(data, 15);
-            this.state.yaw = -parseInput(data, 17);
+            this.state.yaw = parseInput(data, 17);
             changed = true;
           } else if (data.length === 58) {
             // Parse button presses

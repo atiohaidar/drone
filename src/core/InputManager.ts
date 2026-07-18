@@ -81,9 +81,9 @@ export class InputManager {
         if (data.dji_connected) {
           this.isControllerActive = true;
           this.inputs.throttle = data.throttle;
-          this.inputs.yaw = data.yaw;
+          this.inputs.yaw = -data.yaw;
           this.inputs.pitch = data.pitch;
-          this.inputs.roll = data.roll;
+          this.inputs.roll = -data.roll;
           this.inputs.camera = data.camera;
 
           if (this.wsText) this.wsText.innerText = 'Active';
