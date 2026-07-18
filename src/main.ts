@@ -127,6 +127,17 @@ window.addEventListener('DOMContentLoaded', () => {
     resetGame();
   });
 
+  inputManager.onModeButton(() => {
+    if (physics.flightMode === 'C') physics.flightMode = 'P';
+    else if (physics.flightMode === 'P') physics.flightMode = 'S';
+    else physics.flightMode = 'C';
+    console.log("3D Simulator Flight Mode:", physics.flightMode);
+    
+    // We can show it in the UI if we add an element, for now log it.
+    const modeEl = document.getElementById('hud-mode');
+    if (modeEl) modeEl.innerText = physics.flightMode + ' MODE';
+  });
+
   inputManager.connectWebSocket();
   inputManager.initKeyboard();
 

@@ -26,8 +26,10 @@ export class InputManager {
   // Button edge detection
   private prevPhotoState = 0;
   private prevFnState = 0;
+  private prevModeState = 0;
   private onPhotoCallback: ButtonCallback | null = null;
   private onFnCallback: ButtonCallback | null = null;
+  private onModeCallback: ButtonCallback | null = null;
 
   // DOM references for status display
   private wsDot: HTMLElement | null = null;
@@ -48,6 +50,11 @@ export class InputManager {
   /** Register callback for the Fn/C1 button press. */
   onFnButton(cb: ButtonCallback): void {
     this.onFnCallback = cb;
+  }
+
+  /** Register callback for the Mode button press. */
+  onModeButton(cb: ButtonCallback): void {
+    this.onModeCallback = cb;
   }
 
   /** Start WebSocket connection to the serial bridge. */
@@ -134,6 +141,7 @@ export class InputManager {
       this.keys[e.code] = true;
       if (e.code === 'KeyC') this.onPhotoCallback?.();
       if (e.code === 'KeyR') this.onFnCallback?.();
+      if (e.code === 'KeyM') this.onModeCallback?.();
     });
 
     window.addEventListener('keyup', (e) => {

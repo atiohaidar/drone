@@ -21,6 +21,7 @@ let droneX = 0.0; // Flat coordinate East-West (meters)
 let droneY = 0.0; // Flat coordinate North-South (meters)
 let rthActive = false; // RTH mode state
 let prevRthButtonState = 0; // State tracker for RTH button debounce
+let flightMode = 'P'; // Modes: 'C' (Cine), 'P' (Positioning), 'S' (Sport)
 
 // Stick inputs (-1.0 to 1.0)
 let inputs = {
@@ -63,6 +64,7 @@ window.droneState = {
     get isRecording() { return isRecording; },
     get rthActive() { return rthActive; },
     get isConnected() { return isConnected; },
+    get flightMode() { return flightMode; },
     get x() { return droneX; },
     get y() { return droneY; },
     set x(val) { droneX = val; },
@@ -141,6 +143,19 @@ function initDateTimeUpdater() {
 // ==========================================
 function initKeyboardListeners() {
     window.addEventListener('keydown', (e) => {
+        if (e.code === 'KeyM' && !keys['KeyM']) {
+            if (flightMode === 'C') { flightMode = 'P'; logAction("Flight Mode Switch -> Positioning (P)", "system"); }
+            else if (flightMode === 'P') { flightMode = 'S'; logAction("Flight Mode Switch -> Sport (S)", "system"); }
+            else { flightMode = 'C'; logAction("Flight Mode Switch -> CineSmooth (C)", "system"); }
+            
+            const modeEl = document.getElementById('tele-mode');
+            if (modeEl) {
+                modeEl.innerText = flightMode + ' MODE';
+                if (flightMode === 'S') modeEl.style.color = '#ff4d4d';
+                else if (flightMode === 'C') modeEl.style.color = '#ffcc00';
+                else modeEl.style.color = '#00ffcc';
+            }
+        }
         keys[e.code] = true;
     });
     
@@ -269,21 +284,35 @@ function startSimulatorLoop() {
         }
         
         // 3. Physics & Navigation updates
+        // Set specs based on flight mode (DJI Mavic Mini 1)
+        let yawSpeed = 130.0; // P Mode
+        let climbRate = 3.0; // P Mode
+        let maxPitchSpeed = 8.0; // P Mode (28.8 km/h)
+        let maxRollSpeed = 8.0; 
+        
+        if (flightMode === 'S') {
+            yawSpeed = 150.0; // Sport Mode
+            climbRate = 4.0; 
+            maxPitchSpeed = 13.0; // Sport Mode (46.8 km/h)
+            maxRollSpeed = 13.0;
+        } else if (flightMode === 'C') {
+            yawSpeed = 30.0; // Cine Mode
+            climbRate = 1.5;
+            maxPitchSpeed = 4.0; // Cine Mode (14.4 km/h)
+            maxRollSpeed = 4.0;
+        }
+
         // Heading change rate (Yaw)
-        const yawSpeed = 90.0; // Degrees per second
         droneHeading += inputs.yaw * yawSpeed * dt;
         if (droneHeading < 0) droneHeading += 360;
         if (droneHeading >= 360) droneHeading -= 360;
         
         // Altitude change rate (Throttle)
-        const climbRate = 4.0; // m/s
         droneAlt += inputs.throttle * climbRate * dt;
         if (droneAlt < 0.0) droneAlt = 0.0; // Ground limit
         if (droneAlt > 500.0) droneAlt = 500.0; // Software limit
         
         // Pitch & Roll movements
-        const maxPitchSpeed = 12.0; // m/s (approx 43 km/h for Mavic Mini Sport mode)
-        const maxRollSpeed = 10.0; // m/s
         
         // Horizontal speed vectors relative to drone heading
         // Pitch moves drone along its heading vector
