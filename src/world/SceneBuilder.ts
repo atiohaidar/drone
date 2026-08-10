@@ -24,24 +24,38 @@ export interface SceneContext {
 
 /** Build the core Babylon.js scene with engine, camera, and lights. */
 export function buildScene(canvas: HTMLCanvasElement): SceneContext {
-  // Create engine
-  const engine = new Engine(canvas, true, {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   (window.innerWidth <= 950 && 'ontouchstart' in window);
+
+  // Create engine with mobile-optimized power settings
+  const engine = new Engine(canvas, !isMobile, {
     preserveDrawingBuffer: false,
-    stencil: true,
-    antialias: true,
+    stencil: false,
+    antialias: !isMobile,
+    powerPreference: 'high-performance'
   });
-  engine.setHardwareScalingLevel(1);
+
+  // Optimize hardware scaling level (prevents 3x Retina supersampling lag on mobile)
+  if (isMobile) {
+    const mobileDPR = Math.min(window.devicePixelRatio || 1, 1.25);
+    engine.setHardwareScalingLevel(1 / mobileDPR);
+  } else {
+    engine.setHardwareScalingLevel(1);
+  }
 
   // Create scene
   const scene = new Scene(engine);
   scene.clearColor = new Color4(0.965, 0.969, 0.973, 1.0); // soft neutral daylight
+
+  // Disable unneeded physics or collision calculations when idle
+  scene.autoClear = true;
+  scene.autoClearDepthAndStencil = true;
 
   // Camera — manual FreeCamera, we'll control it ourselves
   const camera = new FreeCamera('mainCamera', new Vector3(0, 7, 10), scene);
   camera.fov = 60 * (Math.PI / 180);
   camera.minZ = 0.1;
   camera.maxZ = 1000;
-  // Detach default camera controls — we handle input manually
   camera.detachControl();
 
   // PiP Camera
@@ -67,10 +81,10 @@ export function buildScene(canvas: HTMLCanvasElement): SceneContext {
   dirLight.diffuse = Color3.White();
   dirLight.position = new Vector3(100, 250, 150);
 
-  // Shadow generator
-  const shadowGenerator = new ShadowGenerator(512, dirLight);
-  shadowGenerator.useBlurExponentialShadowMap = true;
-  shadowGenerator.blurKernel = 8;
+  // Shadow generator (lighter shadow map resolution on mobile)
+  const shadowGenerator = new ShadowGenerator(isMobile ? 256 : 512, dirLight);
+  shadowGenerator.useBlurExponentialShadowMap = !isMobile;
+  shadowGenerator.blurKernel = isMobile ? 4 : 8;
   shadowGenerator.depthScale = 30;
   shadowGenerator.bias = 0.0003;
 

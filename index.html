@@ -21,13 +21,21 @@
   <div class="hud-layer">
     <!-- Header HUD -->
     <header class="hud-header">
-      <!-- Left Brand & Status -->
-      <div class="glass-panel brand-section">
-        <h1>ANTIGRAVITY // <span>3D CHALLENGE</span></h1>
-        <p>Mavic Mini FPV Obstacle Simulator</p>
-        <div class="connection-status">
-          <span class="status-dot" id="ws-dot"></span>
-          <span class="status-text" id="ws-text">Disconnected</span>
+      <!-- Left Ultra-Clean Mini OSD Badge -->
+      <div class="glass-panel mini-osd-panel interactive" id="hud-mini-osd" title="Click battery to toggle Unlimited Battery mode">
+        <div class="osd-badge-item" id="btn-toggle-battery" title="Click to toggle Infinite Battery Mode">
+          <span class="osd-icon">🔋</span>
+          <span class="osd-val" id="osd-battery-val">100%</span>
+          <span class="osd-mode-badge" id="osd-battery-badge">∞</span>
+        </div>
+        <span class="osd-sep">|</span>
+        <div class="osd-badge-item">
+          <span class="osd-val osd-accent" id="hud-mode">P-MODE</span>
+        </div>
+        <span class="osd-sep">|</span>
+        <div class="osd-badge-item">
+          <span class="osd-icon">🧭</span>
+          <span class="osd-val" id="osd-compass-val">000° N</span>
         </div>
       </div>
 

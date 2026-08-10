@@ -199,6 +199,12 @@ window.addEventListener('DOMContentLoaded', () => {
     touchController.toggle();
   });
 
+  // Mini OSD Battery Unlimited / Normal Drain Toggle
+  document.getElementById('hud-mini-osd')?.addEventListener('click', () => {
+    const isDrain = physics.toggleBatteryDrain();
+    console.log('Battery drain mode:', isDrain ? 'NORMAL DRAIN' : 'INFINITE BATTERY');
+  });
+
   document.getElementById('btn-start')?.addEventListener('click', () => {
     stateManager.startGame();
   });
@@ -273,6 +279,7 @@ window.addEventListener('DOMContentLoaded', () => {
     inputManager.updateFromKeyboard();
     hud.updateInputs(inputManager.inputs);
     hud.updateTelemetry(physics.velocity.length(), Math.max(0, physics.position.y), inputManager.inputs.yaw * 8);
+    hud.updateMiniOSD(physics.droneBattery, !physics.isBatteryDrainEnabled, physics.getCompassHeadingString());
 
     // Update physics
     const damage = physics.update(

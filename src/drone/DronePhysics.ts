@@ -37,6 +37,31 @@ export class DronePhysics {
 
   // Drone Battery
   public droneBattery = 100.0;
+  public isBatteryDrainEnabled = false; // Default: Infinite Battery Mode
+
+  public toggleBatteryDrain(): boolean {
+    this.isBatteryDrainEnabled = !this.isBatteryDrainEnabled;
+    if (!this.isBatteryDrainEnabled) {
+      this.droneBattery = 100.0;
+    }
+    return this.isBatteryDrainEnabled;
+  }
+
+  /** Calculate compass heading string (000° N format) */
+  public getCompassHeadingString(): string {
+    const degrees = (Math.round((-this.heading * 180 / Math.PI) % 360) + 360) % 360;
+    let cardinal = 'N';
+    if (degrees >= 337.5 || degrees < 22.5) cardinal = 'N';
+    else if (degrees >= 22.5 && degrees < 67.5) cardinal = 'NE';
+    else if (degrees >= 67.5 && degrees < 112.5) cardinal = 'E';
+    else if (degrees >= 112.5 && degrees < 157.5) cardinal = 'SE';
+    else if (degrees >= 157.5 && degrees < 202.5) cardinal = 'S';
+    else if (degrees >= 202.5 && degrees < 247.5) cardinal = 'SW';
+    else if (degrees >= 247.5 && degrees < 292.5) cardinal = 'W';
+    else if (degrees >= 292.5 && degrees < 337.5) cardinal = 'NW';
+
+    return `${degrees.toString().padStart(3, '0')}° ${cardinal}`;
+  }
 
   private speedEl: HTMLElement | null = document.getElementById('hud-speed');
   private altEl: HTMLElement | null = document.getElementById('hud-alt');
@@ -79,16 +104,19 @@ export class DronePhysics {
     this.currentGimbalPitch += (this.targetGimbalPitch - this.currentGimbalPitch) * 10.0 * dt;
 
     // Tilt gimbal visually (Horizon Lock)
-    // Counter-tilt the gimbal by the drone's current pitch to keep the horizon level.
     if (droneModel.gimbal) {
       droneModel.gimbal.rotation.x = this.currentGimbalPitch - this.pitch;
     }
 
     if (!gameActive) return 0;
 
-    // Battery Drain (5 minutes from 100 to 0)
-    this.droneBattery -= (100.0 / 300.0) * dt;
-    if (this.droneBattery < 0) this.droneBattery = 0;
+    // Battery Drain (5 minutes from 100 to 0) — optional toggle
+    if (this.isBatteryDrainEnabled) {
+      this.droneBattery -= (100.0 / 300.0) * dt;
+      if (this.droneBattery < 0) this.droneBattery = 0;
+    } else {
+      this.droneBattery = 100.0;
+    }
 
     // DJI Mavic Mini 1 Specs mapped to Force/Drag engine
     let yawRate = 2.27; // ~130 deg/s (P Mode)

@@ -17,6 +17,10 @@ export class HUD {
   private healthFill: HTMLElement | null;
   private healthPct: HTMLElement | null;
 
+  private osdBatteryVal: HTMLElement | null;
+  private osdBatteryBadge: HTMLElement | null;
+  private osdCompassVal: HTMLElement | null;
+
   constructor() {
     this.barThr = document.getElementById('bar-thr');
     this.valThr = document.getElementById('val-thr');
@@ -30,6 +34,10 @@ export class HUD {
     this.telemetryCards = Array.from(document.querySelectorAll('.telemetry-card'));
     this.healthFill = document.getElementById('health-fill');
     this.healthPct = document.getElementById('health-pct');
+
+    this.osdBatteryVal = document.getElementById('osd-battery-val');
+    this.osdBatteryBadge = document.getElementById('osd-battery-badge');
+    this.osdCompassVal = document.getElementById('osd-compass-val');
   }
 
   private setDialProgress(card: HTMLElement | undefined, value: number, maxValue: number): void {
@@ -68,6 +76,21 @@ export class HUD {
     this.setDialProgress(this.telemetryCards[0], speed, 12);
     this.setDialProgress(this.telemetryCards[1], altitude, 30);
     this.setDialProgress(this.telemetryCards[2], windForce, 8);
+  }
+
+  /** Update Mini OSD badge (Battery, Infinite Mode Badge, Compass Heading). */
+  public updateMiniOSD(batteryPct: number, isInfiniteBattery: boolean, compassStr: string): void {
+    if (this.osdBatteryVal) {
+      this.osdBatteryVal.innerText = isInfiniteBattery ? '100%' : `${Math.round(batteryPct)}%`;
+    }
+
+    if (this.osdBatteryBadge) {
+      this.osdBatteryBadge.style.display = isInfiniteBattery ? 'inline-block' : 'none';
+    }
+
+    if (this.osdCompassVal) {
+      this.osdCompassVal.innerText = compassStr;
+    }
   }
 
   /** Update the shield health bar. */

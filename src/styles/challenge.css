@@ -552,73 +552,169 @@ body, html {
 }
 
 /* ==============================================================
-   WINDOWS 95/98 RETRO CLASSIC OVERRIDES
+   UNIFIED MODERN DARK FPV GLASSMORPHISM DESIGN SYSTEM
    ============================================================== */
 
 :root {
-    --text-muted: #333333 !important;
-    --text-main: #000000 !important;
-    --primary: #000080 !important;
-}
-
-/* Remove backdrop blur */
-* {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    --bg-color: #0f172a;
+    --primary: #22c55e;
+    --primary-glow: rgba(34, 197, 94, 0.3);
+    --secondary: #ec4899;
+    --secondary-glow: rgba(236, 72, 153, 0.3);
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(15, 23, 42, 0.78);
+    --glass-border: rgba(255, 255, 255, 0.15);
 }
 
 body, html {
-    background-color: #808080 !important; /* Classic Slate Gray */
-    font-family: 'Tahoma', 'MS Sans Serif', sans-serif !important;
-    color: #000000 !important;
+    background-color: var(--bg-color);
+    font-family: 'Outfit', 'Tahoma', sans-serif;
+    color: var(--text-main);
 }
 
-/* Glass panel boxes styled as MS Silver beveled dialog windows (semi-transparent) */
+/* Glass panel boxes styled as sleek dark translucent dialogs */
 .glass-panel, .legend-panel, .health-container {
-    background: rgba(192, 192, 192, 0.85) !important; /* Semi-transparent MS Silver */
-    border: 2px solid !important;
-    border-color: #ffffff #808080 #808080 #ffffff !important;
-    box-shadow: 1px 1px 0px 1px #000000, inset 1px 1px 0px 1px #dfdfdf !important;
-    border-radius: 0 !important;
-    color: #000000 !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+    color: #f8fafc !important;
 }
 
-/* Compact Brand Section */
-.brand-section {
-    padding: 6px 12px !important;
+/* Ultra-Clean Mini OSD Panel */
+.mini-osd-panel {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: clamp(6px, 1.2vw, 10px) !important;
+    padding: clamp(4px, 0.8vh, 7px) clamp(10px, 1.5vw, 14px) !important;
+    border-radius: 999px !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
-.brand-section p {
-    display: none !important; /* Hide flavor text to save space */
+
+.osd-badge-item {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
 }
-.connection-status {
-    margin-top: 2px !important;
+
+.osd-icon {
+    font-size: clamp(0.72rem, 2vh, 0.9rem) !important;
+}
+
+.osd-val {
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: clamp(0.72rem, 2.2vh, 0.88rem) !important;
+    font-weight: bold !important;
+    color: #00ffcc !important;
+}
+
+.osd-accent {
+    color: #22c55e !important;
+}
+
+.osd-sep {
+    color: rgba(255, 255, 255, 0.25) !important;
+    font-size: clamp(0.6rem, 1.8vh, 0.75rem) !important;
+}
+
+.osd-mode-badge {
+    background: #22c55e !important;
+    color: #0f172a !important;
+    font-size: clamp(0.55rem, 1.5vh, 0.65rem) !important;
+    font-weight: 800 !important;
+    padding: 1px 5px !important;
+    border-radius: 4px !important;
+    margin-left: 2px !important;
 }
 
 /* Compact & Horizontal Game Tracker (Gate HUD) */
 .game-tracker {
-    flex-direction: row !important; /* Horizontal layout */
+    flex-direction: row !important;
     align-items: center !important;
     min-width: auto !important;
-    gap: 15px !important;
-    padding: 6px 12px !important;
+    gap: 12px !important;
+    padding: 6px 14px !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
+
 .checkpoint-title {
-    display: none !important; /* Hide self-explanatory header */
+    display: none !important;
 }
+
 .checkpoint-value {
     margin-bottom: 0 !important;
+    color: #00ffcc !important;
 }
+
 .timer-value {
     margin-bottom: 0 !important;
+    color: #ffffff !important;
 }
 
 /* Compact & Horizontal Top Right Panel */
 .top-right-panel {
-    flex-direction: row !important; /* Horizontal button layout */
+    flex-direction: row !important;
     gap: 8px !important;
 }
-.top-right-panel .btn {
-    padding: 4px 8px !important;
+
+/* Buttons styled as sleek dark glass items */
+.btn {
+    background: rgba(30, 41, 59, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.2s ease !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.btn:hover {
+    background: rgba(34, 197, 94, 0.25) !important;
+    border-color: #22c55e !important;
+    color: #ffffff !important;
+}
+
+.btn:active {
+    transform: scale(0.96) !important;
+}
+
+.btn.active {
+    background: rgba(34, 197, 94, 0.3) !important;
+    border-color: #22c55e !important;
+    color: #22c55e !important;
+}
+
+.btn-primary {
+    background: #15803d !important;
+    border-color: #22c55e !important;
+    color: #ffffff !important;
+}
+
+.btn-danger {
+    background: rgba(220, 38, 38, 0.85) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.btn-danger:hover {
+    background: rgba(220, 38, 38, 1) !important;
 }
 
 /* Telemetry panel and card status bar styling */
@@ -634,148 +730,102 @@ body, html {
 
 .telemetry-card {
     display: flex !important;
-    flex-direction: row !important; /* Horizontal layout */
+    flex-direction: row !important;
     align-items: center !important;
     gap: 8px !important;
-    background: rgba(192, 192, 192, 0.85) !important;
-    border: 2px solid !important;
-    border-color: #ffffff #808080 #808080 #ffffff !important; /* Beveled */
-    border-radius: 0 !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 999px !important;
     height: 32px !important;
     width: auto !important;
-    padding: 4px 12px !important;
+    padding: 4px 14px !important;
     margin: 0 !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
 }
 
-/* Remove circular conic progress dial layout for Windows 95 retro realism */
 .telemetry-card::before, .telemetry-card::after {
     display: none !important;
 }
 
 .telemetry-label {
-    color: #333333 !important; /* High contrast dark grey */
-    font-weight: bold !important;
-    font-size: 0.75rem !important;
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+    font-size: 0.72rem !important;
 }
 
 .telemetry-val {
-    color: #000080 !important; /* Navy */
-    font-size: 1.2rem !important;
+    color: #00ffcc !important;
+    font-size: 1.1rem !important;
     font-family: 'Share Tech Mono', monospace !important;
 }
 
 .telemetry-unit {
-    color: #333333 !important;
-    font-weight: bold !important;
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+    font-size: 0.72rem !important;
+    margin-left: -2px !important;
+}
+
+/* Controls Legend Panel on Desktop */
+.legend-panel {
+    position: absolute !important;
+    right: 20px !important;
+    top: 80px !important;
+    width: 260px !important;
+    padding: 16px !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.legend-panel h2 {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #f8fafc !important;
+    margin-bottom: 10px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 6px !important;
+}
+
+.legend-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 6px !important;
     font-size: 0.75rem !important;
-    margin-left: -4px !important;
-}
-
-/* Buttons styled as MS Silver beveled rectangular items */
-.btn {
-    background: #c0c0c0 !important;
-    border: 2px solid !important;
-    border-color: #ffffff #808080 #808080 #ffffff !important;
-    border-radius: 0 !important;
-    color: #000000 !important;
-    font-family: 'Tahoma', sans-serif !important;
-    font-weight: normal !important;
-    box-shadow: none !important;
-    transition: none !important;
-}
-
-.btn:hover {
-    background: #dfdfdf !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-.btn:active {
-    border-color: #808080 #ffffff #ffffff #808080 !important;
-}
-
-.btn.active {
-    background: #c0c0c0 !important;
-    border-color: #808080 #ffffff #ffffff #808080 !important;
-    color: #000000 !important;
-    font-weight: bold !important;
-}
-
-.btn-primary {
-    font-weight: bold !important;
-    outline: 1px dotted #000000 !important;
-    outline-offset: -4px !important;
-}
-
-.btn-danger {
-    color: #a00000 !important;
-}
-
-/* Shield/Health Bar recessed track */
-.health-bar-bg {
-    background: #ffffff !important;
-    border: 2px solid !important;
-    border-color: #808080 #ffffff #ffffff #808080 !important;
-    box-shadow: inset 1px 1px 0px #000000 !important;
-    border-radius: 0 !important;
-    height: 12px !important;
-}
-
-.health-bar-fill {
-    background: #000080 !important; /* Solid Navy Blue fill */
-    box-shadow: none !important;
-}
-
-/* Input sliders tracks */
-.input-track {
-    background: #ffffff !important;
-    border: 2px solid !important;
-    border-color: #808080 #ffffff #ffffff #808080 !important;
-    border-radius: 0 !important;
-    height: 12px !important;
-}
-
-.input-fill {
-    background: #000080 !important;
-}
-
-/* Brand Section title bar accent */
-.brand-section h1 span {
-    color: #ffffff !important;
-    background: #000080 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    font-size: 0.78rem !important;
-}
-
-.checkpoint-value {
-    color: #000080 !important;
+    color: #94a3b8 !important;
 }
 
 .legend-key {
-    color: #000080 !important;
+    color: #00ffcc !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    font-weight: bold !important;
 }
 
 /* Overlay Screen Modal Box styled as a complete responsive popup box */
 .screen-overlay {
-    background: rgba(0, 128, 128, 0.9) !important;
+    background: rgba(15, 23, 42, 0.85) !important;
     padding: clamp(8px, 2vh, 20px) !important;
     box-sizing: border-box !important;
 }
 
 .modal-card {
-    background: #c0c0c0 !important;
-    border: 2px solid !important;
-    border-color: #ffffff #808080 #808080 #ffffff !important;
-    box-shadow: 2px 2px 0px 1px #000000, inset 1px 1px 0px 1px #dfdfdf !important;
-    padding: clamp(10px, 2.5vh, 20px) clamp(12px, 3vw, 24px) !important;
-    border-radius: 0 !important;
-    color: #000000 !important;
+    background: rgba(15, 23, 42, 0.92) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    padding: clamp(14px, 3vh, 26px) clamp(16px, 3vw, 28px) !important;
+    border-radius: 20px !important;
+    color: #f8fafc !important;
     max-width: min(92vw, 440px) !important;
     max-height: 88vh !important;
     overflow-y: auto !important;
     margin: auto !important;
     box-sizing: border-box !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
 }
 
 .modal-card::before {
@@ -786,67 +836,69 @@ body, html {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: clamp(32px, 6vh, 48px) !important;
-    height: clamp(32px, 6vh, 48px) !important;
+    width: clamp(36px, 6vh, 48px) !important;
+    height: clamp(36px, 6vh, 48px) !important;
     font-size: clamp(1.2rem, 3.5vh, 1.8rem) !important;
-    margin: 0 auto 6px !important;
-    background: rgba(0, 0, 128, 0.1) !important;
+    margin: 0 auto 8px !important;
+    background: rgba(34, 197, 94, 0.15) !important;
+    border: 1px solid rgba(34, 197, 94, 0.3) !important;
     border-radius: 50% !important;
+    color: #22c55e !important;
 }
 
 .modal-title {
-    color: #000080 !important;
-    font-size: clamp(0.95rem, 3.5vh, 1.35rem) !important;
-    font-weight: bold !important;
-    font-family: 'Tahoma', sans-serif !important;
-    border-bottom: 2px solid #000080 !important;
-    padding-bottom: 4px !important;
-    margin-bottom: 8px !important;
-    text-align: left !important;
+    color: #ffffff !important;
+    font-size: clamp(1rem, 3.5vh, 1.4rem) !important;
+    font-weight: 800 !important;
+    font-family: 'Outfit', sans-serif !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
     width: 100% !important;
 }
 
 .modal-title span {
-    color: #000080 !important;
+    color: #22c55e !important;
 }
 
 .modal-desc {
-    color: #000000 !important;
-    font-size: clamp(0.68rem, 2.2vh, 0.82rem) !important;
+    color: #94a3b8 !important;
+    font-size: clamp(0.7rem, 2.2vh, 0.85rem) !important;
     margin-top: 4px !important;
-    margin-bottom: 10px !important;
-    line-height: 1.35 !important;
-    text-align: left !important;
+    margin-bottom: 14px !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
 }
 
 .modal-stats {
-    background: #ffffff !important;
-    border: 2px solid !important;
-    border-color: #808080 #ffffff #ffffff #808080 !important;
-    box-shadow: inset 1px 1px 0px #000000 !important;
-    border-radius: 0 !important;
-    color: #000000 !important;
-    padding: clamp(6px, 1.5vh, 10px) !important;
-    margin-bottom: 10px !important;
+    background: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: clamp(8px, 1.8vh, 12px) !important;
+    margin-bottom: 14px !important;
     gap: clamp(6px, 2vw, 12px) !important;
 }
 
 .stat-lbl {
-    font-size: clamp(0.55rem, 1.8vh, 0.65rem) !important;
+    font-size: clamp(0.58rem, 1.8vh, 0.68rem) !important;
+    color: #94a3b8 !important;
 }
 
 .stat-val {
-    color: #000080 !important;
-    font-size: clamp(0.8rem, 2.8vh, 1.15rem) !important;
+    color: #00ffcc !important;
+    font-size: clamp(0.85rem, 2.8vh, 1.2rem) !important;
 }
 
 .btn-large {
-    padding: clamp(6px, 1.8vh, 10px) clamp(12px, 2vw, 20px) !important;
-    font-size: clamp(0.75rem, 2.4vh, 0.9rem) !important;
+    padding: clamp(8px, 1.8vh, 12px) clamp(16px, 2vw, 24px) !important;
+    font-size: clamp(0.8rem, 2.4vh, 0.95rem) !important;
+    border-radius: 12px !important;
 }
 
 /* ==========================================================================
-   MOBILE TOUCH CONTROLLER & STYLES (MODE 2 DUAL VIRTUAL JOYSTICKS)
+   SLEEK DARK FPV TOUCH CONTROLLER & JOYSTICK STYLES
    ========================================================================== */
 
 .touch-overlay-container {
@@ -882,16 +934,17 @@ body, html {
     right: clamp(10px, 3vw, 25px);
 }
 
+/* Translucent Dark Glass Outer Socket Ring */
 .stick-ring {
     position: relative;
     width: clamp(80px, 20vmin, 120px);
     height: clamp(80px, 20vmin, 120px);
     border-radius: 50%;
-    background: rgba(15, 23, 42, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+    background: rgba(15, 23, 42, 0.55) !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.05) !important;
     touch-action: none;
 }
 
@@ -908,7 +961,7 @@ body, html {
 .stick-axis-cross::before, .stick-axis-cross::after {
     content: '';
     position: absolute;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.15) !important;
 }
 
 .stick-axis-cross::before {
@@ -927,6 +980,7 @@ body, html {
     transform: translateX(-50%);
 }
 
+/* Glowing Emerald Green Knob */
 .stick-knob {
     position: absolute;
     top: 50%;
@@ -934,29 +988,37 @@ body, html {
     width: clamp(32px, 8vmin, 48px);
     height: clamp(32px, 8vmin, 48px);
     border-radius: 50%;
-    background: radial-gradient(circle, #22c55e 0%, #15803d 100%);
-    border: 2px solid #ffffff;
-    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5);
+    background: radial-gradient(circle, #22c55e 0%, #15803d 100%) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
     transform: translate(-50%, -50%);
     pointer-events: none;
     transition: box-shadow 0.15s ease;
 }
 
+.stick-knob::after {
+    display: none;
+}
+
 .stick-ring:active .stick-knob {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.9), inset 0 2px 6px rgba(255, 255, 255, 0.6) !important;
 }
 
 .stick-label {
-    margin-top: 3px;
-    font-size: clamp(0.5rem, 1.5vh, 0.65rem);
+    margin-top: 4px;
+    font-size: clamp(0.52rem, 1.5vh, 0.65rem);
     font-weight: 700;
+    font-family: 'Share Tech Mono', monospace !important;
     letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.8) !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
     pointer-events: none;
 }
 
-/* Touch Action Buttons Bar */
+/* Touch Action Buttons Bar styled as Dark Translucent Items */
 .touch-action-bar {
     position: absolute;
     bottom: clamp(10px, 3vh, 25px);
@@ -971,18 +1033,18 @@ body, html {
 .touch-btn {
     width: clamp(30px, 7vmin, 42px);
     height: clamp(30px, 7vmin, 42px);
-    border-radius: clamp(6px, 1.5vw, 12px);
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    border-radius: clamp(8px, 1.5vw, 12px) !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: clamp(0.7rem, 2vh, 0.9rem);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     cursor: pointer;
     touch-action: manipulation;
 }
@@ -990,23 +1052,32 @@ body, html {
 .touch-btn svg {
     width: clamp(12px, 3.5vmin, 18px);
     height: clamp(12px, 3.5vmin, 18px);
+    stroke: #ffffff !important;
 }
 
 .touch-btn:active {
     transform: scale(0.92);
-    background: rgba(34, 197, 94, 0.4);
+    background: rgba(34, 197, 94, 0.4) !important;
 }
 
 .touch-btn-primary {
-    background: rgba(21, 128, 61, 0.85);
+    background: rgba(21, 128, 61, 0.85) !important;
 }
 
 .touch-btn-warning {
-    background: rgba(234, 88, 12, 0.85);
+    background: rgba(234, 88, 12, 0.85) !important;
+}
+
+.touch-btn-warning span {
+    color: #ffffff !important;
 }
 
 .touch-btn-danger {
-    background: rgba(220, 38, 38, 0.85);
+    background: rgba(220, 38, 38, 0.85) !important;
+}
+
+.touch-btn-danger svg {
+    stroke: #ffffff !important;
 }
 
 /* Orientation Overlay Modal */
@@ -1076,6 +1147,16 @@ body, html {
    ========================================================================== */
 
 @media (max-width: 950px), (max-height: 550px) {
+    /* Disable expensive GPU fragment blurs on mobile to guarantee 60 FPS */
+    *, .glass-panel, .mini-osd-panel, .game-tracker, .top-right-panel, .telemetry-card, .modal-card, .btn, .touch-btn, .stick-ring {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .glass-panel, .mini-osd-panel, .game-tracker, .top-right-panel, .telemetry-card, .modal-card, .btn, .touch-btn {
+        background: rgba(15, 23, 42, 0.92) !important;
+    }
+
     .hud-layer {
         padding: clamp(4px, 1.5vh, 8px) clamp(6px, 1.5vw, 12px) !important;
     }
@@ -1085,39 +1166,13 @@ body, html {
         align-items: flex-start !important;
     }
 
-    /* Brand Section Card */
-    .brand-section {
-        padding: clamp(2px, 0.8vh, 5px) clamp(5px, 1vw, 10px) !important;
-        max-width: clamp(130px, 28vw, 210px) !important;
-    }
-
-    .brand-section h1 {
-        font-size: clamp(0.6rem, 2.2vh, 0.78rem) !important;
-        gap: 4px !important;
-        flex-wrap: wrap !important;
-    }
-
-    .brand-section h1 span {
-        font-size: clamp(0.5rem, 1.8vh, 0.6rem) !important;
-        padding: 1px 4px !important;
-    }
-
-    .brand-section p {
+    /* Hide bulky right legend panel & input bars on mobile landscape screens */
+    .legend-panel {
         display: none !important;
     }
 
-    .connection-status {
-        margin-top: 1px !important;
-        gap: 4px !important;
-    }
-
-    .status-dot {
-        width: 5px !important;
-        height: 5px !important;
-    }
-
-    .status-text {
-        font-size: clamp(0.52rem, 1.8vh, 0.62rem) !important;
+    .health-container {
+        display: none !important;
     }
 
     /* Game Tracker Card (Checkpoint & Timer) */
@@ -1168,9 +1223,9 @@ body, html {
     }
 
     .telemetry-card {
-        padding: 1px 5px !important;
+        padding: 1px 6px !important;
         height: clamp(20px, 4vh, 26px) !important;
-        gap: 3px !important;
+        gap: 4px !important;
         min-width: auto !important;
     }
 
@@ -1189,14 +1244,6 @@ body, html {
 
 /* Extra small mobile widths (< 680px) */
 @media (max-width: 680px) {
-    .brand-section {
-        max-width: 140px !important;
-    }
-
-    .brand-section h1 span {
-        display: none !important;
-    }
-
     .top-right-panel .btn-text {
         display: none !important; /* Hide text, keep sleek icons on small mobile screens */
     }
@@ -1205,6 +1252,7 @@ body, html {
         padding: 4px 6px !important;
     }
 }
+
 
 
 
