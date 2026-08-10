@@ -79,13 +79,12 @@ export class CameraController {
     );
     const fpvTarget = fpvPos.clone().addInPlace(lookRotated);
 
-    // Calculate Gate Tracker
-    const time = performance.now() * 0.0003;
+    // Calculate Gate Tracker — eye level beside the gate, like a person watching the drone fly
     const activeGate = courseCheckpoints[activeCheckpointIndex % courseCheckpoints.length];
     const gateTrackerPos = new Vector3(
-      activeGate.x + Math.sin(time) * 20,
-      activeGate.y + 12,
-      activeGate.z + Math.cos(time) * 20
+      activeGate.x + 20,
+      1.6,   // eye level ~1.6m above ground
+      activeGate.z
     );
     const gateTrackerTarget = dronePos.clone();
 

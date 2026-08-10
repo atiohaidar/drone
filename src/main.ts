@@ -14,6 +14,8 @@ import { CameraController } from './drone/CameraController';
 import { CollisionSystem, CollisionStructure, BeamData, CrateCollider } from './drone/CollisionSystem';
 import { HUD } from './ui/HUD';
 import { showStartScreen, hideAllScreens } from './ui/Screens';
+import { TouchController } from './ui/TouchController';
+import { OrientationGuard } from './ui/OrientationGuard';
 import { createIcons, Rocket, Mountain, Home, TriangleAlert, Trophy } from 'lucide';
 
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
@@ -65,6 +67,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const hud = new HUD();
   const collisionSystem = new CollisionSystem(sceneCtx.scene);
   const cameraController = new CameraController(sceneCtx.camera, sceneCtx.pipCamera);
+
+  // Initialize Touch Controller & Mobile Orientation Guard
+  const touchController = new TouchController();
+  const orientationGuard = new OrientationGuard();
+  inputManager.setTouchController(touchController);
 
   // 2. Build drone model
   const droneModel = buildDroneModel(sceneCtx.scene, sceneCtx.shadowGenerator);
@@ -138,15 +145,60 @@ window.addEventListener('DOMContentLoaded', () => {
     else physics.flightMode = 'C';
     console.log("3D Simulator Flight Mode:", physics.flightMode);
     
-    // We can show it in the UI if we add an element, for now log it.
     const modeEl = document.getElementById('hud-mode');
     if (modeEl) modeEl.innerText = physics.flightMode + ' MODE';
+
+    const touchModeLabel = document.getElementById('touch-mode-label');
+    if (touchModeLabel) touchModeLabel.innerText = physics.flightMode;
   });
 
   inputManager.connectWebSocket();
   inputManager.initKeyboard();
 
   // Button Action Bindings
+  const btnFullscreen = document.getElementById('btn-fullscreen');
+  const iconEnter = document.getElementById('icon-fullscreen-enter');
+  const iconExit = document.getElementById('icon-fullscreen-exit');
+
+  async function toggleFullscreen() {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+        if (screen.orientation && 'lock' in screen.orientation) {
+          // @ts-ignore lock orientation if supported
+          await screen.orientation.lock('landscape').catch(() => {});
+        }
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.log('Fullscreen request bypassed:', err);
+    }
+  }
+
+  function updateFullscreenIcons() {
+    const isFS = !!document.fullscreenElement;
+    if (iconEnter) iconEnter.style.display = isFS ? 'none' : 'inline-block';
+    if (iconExit) iconExit.style.display = isFS ? 'inline-block' : 'none';
+    if (btnFullscreen) {
+      btnFullscreen.classList.toggle('active', isFS);
+    }
+  }
+
+  btnFullscreen?.addEventListener('click', () => {
+    toggleFullscreen();
+  });
+
+  document.addEventListener('fullscreenchange', updateFullscreenIcons);
+  // @ts-ignore
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+
+  document.getElementById('btn-toggle-touch')?.addEventListener('click', () => {
+    touchController.toggle();
+  });
+
   document.getElementById('btn-start')?.addEventListener('click', () => {
     stateManager.startGame();
   });

@@ -756,9 +756,11 @@ body, html {
     color: #000080 !important;
 }
 
-/* Overlay Screen Modal Box styled as a complete Windows 95 popup box */
+/* Overlay Screen Modal Box styled as a complete responsive popup box */
 .screen-overlay {
-    background: rgba(0, 128, 128, 0.9) !important; /* Semi-transparent teal */
+    background: rgba(0, 128, 128, 0.9) !important;
+    padding: clamp(8px, 2vh, 20px) !important;
+    box-sizing: border-box !important;
 }
 
 .modal-card {
@@ -766,9 +768,14 @@ body, html {
     border: 2px solid !important;
     border-color: #ffffff #808080 #808080 #ffffff !important;
     box-shadow: 2px 2px 0px 1px #000000, inset 1px 1px 0px 1px #dfdfdf !important;
-    padding: 16px !important;
+    padding: clamp(10px, 2.5vh, 20px) clamp(12px, 3vw, 24px) !important;
     border-radius: 0 !important;
     color: #000000 !important;
+    max-width: min(92vw, 440px) !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+    margin: auto !important;
+    box-sizing: border-box !important;
 }
 
 .modal-card::before {
@@ -776,17 +783,25 @@ body, html {
 }
 
 .modal-logo {
-    display: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: clamp(32px, 6vh, 48px) !important;
+    height: clamp(32px, 6vh, 48px) !important;
+    font-size: clamp(1.2rem, 3.5vh, 1.8rem) !important;
+    margin: 0 auto 6px !important;
+    background: rgba(0, 0, 128, 0.1) !important;
+    border-radius: 50% !important;
 }
 
 .modal-title {
     color: #000080 !important;
-    font-size: 1.25rem !important;
+    font-size: clamp(0.95rem, 3.5vh, 1.35rem) !important;
     font-weight: bold !important;
     font-family: 'Tahoma', sans-serif !important;
     border-bottom: 2px solid #000080 !important;
     padding-bottom: 4px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
     text-align: left !important;
     width: 100% !important;
 }
@@ -797,8 +812,10 @@ body, html {
 
 .modal-desc {
     color: #000000 !important;
-    font-size: 0.85rem !important;
-    margin-top: 10px !important;
+    font-size: clamp(0.68rem, 2.2vh, 0.82rem) !important;
+    margin-top: 4px !important;
+    margin-bottom: 10px !important;
+    line-height: 1.35 !important;
     text-align: left !important;
 }
 
@@ -809,8 +826,385 @@ body, html {
     box-shadow: inset 1px 1px 0px #000000 !important;
     border-radius: 0 !important;
     color: #000000 !important;
+    padding: clamp(6px, 1.5vh, 10px) !important;
+    margin-bottom: 10px !important;
+    gap: clamp(6px, 2vw, 12px) !important;
+}
+
+.stat-lbl {
+    font-size: clamp(0.55rem, 1.8vh, 0.65rem) !important;
 }
 
 .stat-val {
     color: #000080 !important;
+    font-size: clamp(0.8rem, 2.8vh, 1.15rem) !important;
 }
+
+.btn-large {
+    padding: clamp(6px, 1.8vh, 10px) clamp(12px, 2vw, 20px) !important;
+    font-size: clamp(0.75rem, 2.4vh, 0.9rem) !important;
+}
+
+/* ==========================================================================
+   MOBILE TOUCH CONTROLLER & STYLES (MODE 2 DUAL VIRTUAL JOYSTICKS)
+   ========================================================================== */
+
+.touch-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none;
+    touch-action: none;
+    user-select: none;
+}
+
+.touch-stick-wrapper {
+    position: absolute;
+    bottom: clamp(10px, 3vh, 25px);
+    width: clamp(85px, 22vmin, 130px);
+    height: clamp(85px, 22vmin, 130px);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+}
+
+.left-stick-wrapper {
+    left: clamp(10px, 3vw, 25px);
+}
+
+.right-stick-wrapper {
+    right: clamp(10px, 3vw, 25px);
+}
+
+.stick-ring {
+    position: relative;
+    width: clamp(80px, 20vmin, 120px);
+    height: clamp(80px, 20vmin, 120px);
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+    touch-action: none;
+}
+
+.stick-axis-cross {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.stick-axis-cross::before, .stick-axis-cross::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.stick-axis-cross::before {
+    top: 50%;
+    left: 15%;
+    width: 70%;
+    height: 1px;
+    transform: translateY(-50%);
+}
+
+.stick-axis-cross::after {
+    left: 50%;
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    transform: translateX(-50%);
+}
+
+.stick-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(32px, 8vmin, 48px);
+    height: clamp(32px, 8vmin, 48px);
+    border-radius: 50%;
+    background: radial-gradient(circle, #22c55e 0%, #15803d 100%);
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: box-shadow 0.15s ease;
+}
+
+.stick-ring:active .stick-knob {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+}
+
+.stick-label {
+    margin-top: 3px;
+    font-size: clamp(0.5rem, 1.5vh, 0.65rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+}
+
+/* Touch Action Buttons Bar */
+.touch-action-bar {
+    position: absolute;
+    bottom: clamp(10px, 3vh, 25px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: clamp(4px, 1.2vw, 8px);
+    pointer-events: auto;
+    z-index: 25;
+}
+
+.touch-btn {
+    width: clamp(30px, 7vmin, 42px);
+    height: clamp(30px, 7vmin, 42px);
+    border-radius: clamp(6px, 1.5vw, 12px);
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(0.7rem, 2vh, 0.9rem);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.touch-btn svg {
+    width: clamp(12px, 3.5vmin, 18px);
+    height: clamp(12px, 3.5vmin, 18px);
+}
+
+.touch-btn:active {
+    transform: scale(0.92);
+    background: rgba(34, 197, 94, 0.4);
+}
+
+.touch-btn-primary {
+    background: rgba(21, 128, 61, 0.85);
+}
+
+.touch-btn-warning {
+    background: rgba(234, 88, 12, 0.85);
+}
+
+.touch-btn-danger {
+    background: rgba(220, 38, 38, 0.85);
+}
+
+/* Orientation Overlay Modal */
+.orientation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(12px, 3vw, 24px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.orientation-modal {
+    max-width: min(90vw, 380px) !important;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 2.5vh, 16px) !important;
+    background: rgba(30, 41, 59, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    padding: clamp(14px, 3vh, 24px) !important;
+}
+
+.phone-rotate-icon {
+    width: clamp(48px, 12vh, 72px) !important;
+    height: clamp(48px, 12vh, 72px) !important;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #22c55e;
+    animation: rotatePhone 2.5s infinite ease-in-out;
+}
+
+@keyframes rotatePhone {
+    0%, 20% { transform: rotate(0deg); }
+    50%, 70% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.orientation-modal h2 {
+    font-size: clamp(1rem, 3.5vh, 1.25rem) !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+.orientation-modal p {
+    font-size: clamp(0.72rem, 2.2vh, 0.85rem) !important;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES FOR MOBILE & SMALL SCREEN LANDSCAPE VIEWS
+   ========================================================================== */
+
+@media (max-width: 950px), (max-height: 550px) {
+    .hud-layer {
+        padding: clamp(4px, 1.5vh, 8px) clamp(6px, 1.5vw, 12px) !important;
+    }
+
+    .hud-header {
+        gap: 6px !important;
+        align-items: flex-start !important;
+    }
+
+    /* Brand Section Card */
+    .brand-section {
+        padding: clamp(2px, 0.8vh, 5px) clamp(5px, 1vw, 10px) !important;
+        max-width: clamp(130px, 28vw, 210px) !important;
+    }
+
+    .brand-section h1 {
+        font-size: clamp(0.6rem, 2.2vh, 0.78rem) !important;
+        gap: 4px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .brand-section h1 span {
+        font-size: clamp(0.5rem, 1.8vh, 0.6rem) !important;
+        padding: 1px 4px !important;
+    }
+
+    .brand-section p {
+        display: none !important;
+    }
+
+    .connection-status {
+        margin-top: 1px !important;
+        gap: 4px !important;
+    }
+
+    .status-dot {
+        width: 5px !important;
+        height: 5px !important;
+    }
+
+    .status-text {
+        font-size: clamp(0.52rem, 1.8vh, 0.62rem) !important;
+    }
+
+    /* Game Tracker Card (Checkpoint & Timer) */
+    .game-tracker {
+        padding: clamp(2px, 0.8vh, 5px) clamp(6px, 1.2vw, 10px) !important;
+        gap: clamp(4px, 1vw, 8px) !important;
+        min-width: auto !important;
+    }
+
+    .checkpoint-title {
+        display: none !important;
+    }
+
+    .checkpoint-value {
+        font-size: clamp(0.72rem, 2.5vh, 0.88rem) !important;
+        margin: 0 !important;
+    }
+
+    .timer-value {
+        font-size: clamp(0.68rem, 2.5vh, 0.82rem) !important;
+        margin: 0 !important;
+    }
+
+    /* Top Right Buttons */
+    .top-right-panel {
+        gap: 4px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .top-right-panel .btn {
+        padding: clamp(2px, 0.6vh, 4px) clamp(4px, 0.8vw, 8px) !important;
+        font-size: clamp(0.6rem, 2vh, 0.72rem) !important;
+        height: clamp(22px, 4.5vh, 28px) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        white-space: nowrap !important;
+    }
+
+    .top-right-panel .btn svg {
+        width: clamp(10px, 2.5vh, 13px) !important;
+        height: clamp(10px, 2.5vh, 13px) !important;
+    }
+
+    /* Bottom Telemetry Cards */
+    .telemetry-panel {
+        gap: 3px !important;
+    }
+
+    .telemetry-card {
+        padding: 1px 5px !important;
+        height: clamp(20px, 4vh, 26px) !important;
+        gap: 3px !important;
+        min-width: auto !important;
+    }
+
+    .telemetry-label {
+        font-size: clamp(0.48rem, 1.6vh, 0.58rem) !important;
+    }
+
+    .telemetry-val {
+        font-size: clamp(0.68rem, 2.2vh, 0.8rem) !important;
+    }
+
+    .telemetry-unit {
+        font-size: clamp(0.48rem, 1.6vh, 0.58rem) !important;
+    }
+}
+
+/* Extra small mobile widths (< 680px) */
+@media (max-width: 680px) {
+    .brand-section {
+        max-width: 140px !important;
+    }
+
+    .brand-section h1 span {
+        display: none !important;
+    }
+
+    .top-right-panel .btn-text {
+        display: none !important; /* Hide text, keep sleek icons on small mobile screens */
+    }
+
+    .top-right-panel .btn {
+        padding: 4px 6px !important;
+    }
+}
+
+
+

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>DJI FPV Drone 3D Obstacle Challenge</title>
   <meta name="description"
     content="A futuristic 3D drone flight simulator and obstacle course challenge powered by Babylon.js and DJI telemetry bridge.">
@@ -40,7 +40,23 @@
 
       <!-- Right Options/Navigation -->
       <div class="top-right-panel interactive">
-        <button class="btn" id="btn-dashboard">
+        <button class="btn" id="btn-fullscreen" title="Toggle Fullscreen Mode">
+          <svg id="icon-fullscreen-enter" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+          <svg id="icon-fullscreen-exit" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+          </svg>
+          <span class="btn-text">Fullscreen</span>
+        </button>
+        <button class="btn" id="btn-toggle-touch" title="Toggle On-Screen Touch Controls">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <path d="M12 18h.01"></path>
+          </svg>
+          <span class="btn-text">Touch Controls</span>
+        </button>
+        <button class="btn" id="btn-dashboard" title="Flight Dashboard">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
@@ -48,14 +64,14 @@
             <rect x="14" y="14" width="7" height="7"></rect>
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
-          Flight Dashboard
+          <span class="btn-text">Dashboard</span>
         </button>
-        <button class="btn btn-danger" id="btn-restart">
+        <button class="btn btn-danger" id="btn-restart" title="Restart Simulator">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
           </svg>
-          Restart (Fn Button)
+          <span class="btn-text">Restart</span>
         </button>
       </div>
     </header>
