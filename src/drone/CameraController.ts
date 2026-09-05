@@ -69,7 +69,11 @@ export class CameraController {
       -fpvOffset.x * sinH + fpvOffset.z * cosH
     );
     const fpvPos = dronePos.clone().addInPlace(rotatedOffset);
-    const targetCameraPitch = dronePitch + currentGimbalPitch;
+
+    // Gimbal Stabilization (Horizon Lock):
+    // The motorized gimbal actively stabilizes the camera against the drone body's pitch tilt.
+    // Moving forward/backward tilts the drone frame, but the camera stays steady on the horizon.
+    const targetCameraPitch = currentGimbalPitch;
     smoothedCameraPitch.value += (targetCameraPitch - smoothedCameraPitch.value) * 12.0 * dt;
     const lookDirection = new Vector3(0, Math.sin(smoothedCameraPitch.value), -Math.cos(smoothedCameraPitch.value));
     const lookRotated = new Vector3(

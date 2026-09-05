@@ -192,9 +192,25 @@ export class CollisionSystem {
         shieldDamage += Math.max(8.0, speed * 6.0);
         this.triggerSparks(dronePos);
       }
+    } else {
+      // Outdoor / Train Map boundary limit
+      const mapLimit = environment === 'train' ? 850 : 450;
+      if (Math.abs(dronePos.x) > mapLimit || Math.abs(dronePos.z) > mapLimit) {
+        if (environment === 'train') {
+          dronePos.set(0, 4.5, 52);
+        } else {
+          dronePos.set(0, 10, 0);
+        }
+        droneVel.set(0, 0, 0);
+        shieldDamage += 10;
+        this.triggerSparks(dronePos);
+        console.warn('Out of bounds! Resetting to spawn.');
+      }
+    }
 
-      // Crate AABB collisions
-      const pad = 1.0;
+    // Crate & Moving Train AABB collisions
+    if (crates && crates.length > 0) {
+      const pad = 0.8;
       crates.forEach(crate => {
         if (
           dronePos.x > crate.minX - pad && dronePos.x < crate.maxX + pad &&
@@ -244,16 +260,6 @@ export class CollisionSystem {
           this.triggerSparks(dronePos);
         }
       });
-    } else {
-      // Outdoor Map boundary limit
-      const mapLimit = 400;
-      if (Math.abs(dronePos.x) > mapLimit || Math.abs(dronePos.z) > mapLimit) {
-        dronePos.set(0, 10, 0);
-        droneVel.set(0, 0, 0);
-        shieldDamage += 10;
-        this.triggerSparks(dronePos);
-        console.warn('Out of bounds! Resetting to spawn.');
-      }
     }
 
     // Pillars and trees collision checking
@@ -275,8 +281,9 @@ export class CollisionSystem {
       }
 
       if (currentRadius > 0 && dist2D < (currentRadius + 1.2) && dronePos.y < col.height) {
-        const pushX = dx / dist2D;
-        const pushZ = dz / dist2D;
+        const safeDist = dist2D > 0.0001 ? dist2D : 0.0001;
+        const pushX = dist2D > 0.0001 ? (dx / safeDist) : 1.0;
+        const pushZ = dist2D > 0.0001 ? (dz / safeDist) : 0.0;
 
         dronePos.x = col.x + pushX * (currentRadius + 1.25);
         dronePos.z = col.z + pushZ * (currentRadius + 1.25);

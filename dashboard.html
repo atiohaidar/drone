@@ -104,10 +104,18 @@
             
             <!-- Help Box -->
             <div class="help-box">
-                <h3>Flight Controls</h3>
-                <div class="control-legend">
-                    <div><strong>Left Stick:</strong> Throttle / Yaw (W, S / A, D)</div>
-                    <div><strong>Right Stick:</strong> Pitch / Roll (Up, Down / Left, Right)</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h3 style="margin: 0;">Flight Controls</h3>
+                    <select id="dash-stick-mode" onchange="setDashboardStickMode(parseInt(this.value, 10))" style="background: rgba(255,255,255,0.1); color: #00ffcc; border: 1px solid rgba(0,255,204,0.3); border-radius: 6px; font-size: 0.75rem; padding: 2px 6px; outline: none; cursor: pointer; font-weight: 600;">
+                        <option value="1" style="background: #0f172a; color: #fff;">Mode 1</option>
+                        <option value="2" selected style="background: #0f172a; color: #fff;">Mode 2</option>
+                        <option value="3" style="background: #0f172a; color: #fff;">Mode 3</option>
+                        <option value="4" style="background: #0f172a; color: #fff;">Mode 4</option>
+                    </select>
+                </div>
+                <div class="control-legend" id="dash-control-legend">
+                    <div id="dash-legend-left"><strong>Left Stick:</strong> Throttle / Yaw (W, S / A, D)</div>
+                    <div id="dash-legend-right"><strong>Right Stick:</strong> Pitch / Roll (Up, Down / Left, Right)</div>
                 </div>
             </div>
         </aside>
@@ -138,7 +146,7 @@
                             <!-- Visual representation of physical sticks -->
                             <div class="sticks-visualizer">
                                 <div class="stick-panel">
-                                    <div class="stick-title">LEFT STICK (Yaw / Throttle)</div>
+                                    <div class="stick-title" id="vis-left-stick-title">LEFT STICK (Throttle / Yaw)</div>
                                     <div class="stick-area" id="vis-left-stick-area">
                                         <div class="stick-axis-v"></div>
                                         <div class="stick-axis-h"></div>
@@ -152,7 +160,7 @@
                                 </div>
                                 
                                 <div class="stick-panel">
-                                    <div class="stick-title">RIGHT STICK (Roll / Pitch)</div>
+                                    <div class="stick-title" id="vis-right-stick-title">RIGHT STICK (Pitch / Roll)</div>
                                     <div class="stick-area" id="vis-right-stick-area">
                                         <div class="stick-axis-v"></div>
                                         <div class="stick-axis-h"></div>

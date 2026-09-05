@@ -3,6 +3,7 @@
  */
 import type { ControllerState } from '../../shared/types';
 import type { TouchController } from '../ui/TouchController';
+import { StickMode, STICK_MODE_CONFIGS, getSavedStickMode, saveStickMode } from './ControlMode';
 
 export interface InputState {
   throttle: number;
@@ -13,11 +14,14 @@ export interface InputState {
 }
 
 type ButtonCallback = () => void;
+type StickModeCallback = (mode: StickMode) => void;
 
 export class InputManager {
   public inputs: InputState = {
     throttle: 0, yaw: 0, pitch: 0, roll: 0, camera: 0
   };
+
+  public stickMode: StickMode = getSavedStickMode();
 
   private socket: WebSocket | null = null;
   private isConnected = false;
@@ -33,6 +37,7 @@ export class InputManager {
   private onPhotoCallback: ButtonCallback | null = null;
   private onFnCallback: ButtonCallback | null = null;
   private onModeCallback: ButtonCallback | null = null;
+  private onStickModeCallback: StickModeCallback | null = null;
 
   // DOM references for status display
   private wsDot: HTMLElement | null = null;
@@ -47,10 +52,24 @@ export class InputManager {
 
   public setTouchController(tc: TouchController): void {
     this.touchController = tc;
+    tc.setStickMode(this.stickMode);
 
     tc.onPhoto(() => this.onPhotoCallback?.());
     tc.onReset(() => this.onFnCallback?.());
     tc.onMode(() => this.onModeCallback?.());
+  }
+
+  public onStickModeChange(cb: StickModeCallback): void {
+    this.onStickModeCallback = cb;
+  }
+
+  public setStickMode(mode: StickMode): void {
+    this.stickMode = mode;
+    saveStickMode(mode);
+    if (this.touchController) {
+      this.touchController.setStickMode(mode);
+    }
+    this.onStickModeCallback?.(mode);
   }
 
   /** Register callback for the photo/shutter button press. */
@@ -91,10 +110,17 @@ export class InputManager {
 
         if (data.dji_connected) {
           this.isControllerActive = true;
-          this.inputs.throttle = data.throttle;
-          this.inputs.yaw = -data.yaw;
-          this.inputs.pitch = data.pitch;
-          this.inputs.roll = -data.roll;
+
+          const rawLeftY = data.throttle;
+          const rawLeftX = -data.yaw;
+          const rawRightY = data.pitch;
+          const rawRightX = -data.roll;
+
+          const cfg = STICK_MODE_CONFIGS[this.stickMode];
+          this.inputs[cfg.leftVertical] = rawLeftY;
+          this.inputs[cfg.leftHorizontal] = rawLeftX;
+          this.inputs[cfg.rightVertical] = rawRightY;
+          this.inputs[cfg.rightHorizontal] = rawRightX;
           this.inputs.camera = data.camera;
 
           if (this.wsText) this.wsText.innerText = 'Active';
@@ -204,20 +230,28 @@ export class InputManager {
     if (this.keys['KeyQ']) this.inputs.camera = -0.5;
     if (this.keys['KeyE']) this.inputs.camera = 0.5;
 
-    // W / S: Throttle
-    if (this.keys['KeyW']) this.inputs.throttle = 0.7;
-    if (this.keys['KeyS']) this.inputs.throttle = -0.7;
+    // Left hand: W / S (Vertical), A / D (Horizontal)
+    let leftY = 0;
+    if (this.keys['KeyW']) leftY = 0.7;
+    if (this.keys['KeyS']) leftY = -0.7;
 
-    // A / D: Yaw
-    if (this.keys['KeyA']) this.inputs.yaw = 0.6;    // Left -> turns Left
-    if (this.keys['KeyD']) this.inputs.yaw = -0.6;   // Right -> turns Right
+    let leftX = 0;
+    if (this.keys['KeyA']) leftX = 0.6;    // Left -> Left action
+    if (this.keys['KeyD']) leftX = -0.6;   // Right -> Right action
 
-    // Up / Down arrows: Pitch
-    if (this.keys['ArrowUp']) this.inputs.pitch = 0.7;
-    if (this.keys['ArrowDown']) this.inputs.pitch = -0.7;
+    // Right hand: Up / Down arrows (Vertical), Left / Right arrows (Horizontal)
+    let rightY = 0;
+    if (this.keys['ArrowUp']) rightY = 0.7;
+    if (this.keys['ArrowDown']) rightY = -0.7;
 
-    // Left / Right arrows: Roll
-    if (this.keys['ArrowLeft']) this.inputs.roll = 0.7;   // Left -> rolls Left
-    if (this.keys['ArrowRight']) this.inputs.roll = -0.7; // Right -> rolls Right
+    let rightX = 0;
+    if (this.keys['ArrowLeft']) rightX = 0.7;   // Left -> Left action
+    if (this.keys['ArrowRight']) rightX = -0.7; // Right -> Right action
+
+    const cfg = STICK_MODE_CONFIGS[this.stickMode];
+    this.inputs[cfg.leftVertical] = leftY;
+    this.inputs[cfg.leftHorizontal] = leftX;
+    this.inputs[cfg.rightVertical] = rightY;
+    this.inputs[cfg.rightHorizontal] = rightX;
   }
 }

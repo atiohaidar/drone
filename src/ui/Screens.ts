@@ -2,7 +2,9 @@
  * Screens UI overlays helper to show/hide modals (Start, Game Over, Victory).
  */
 
-export function showStartScreen(controlMethodText: string, currentEnv: 'outdoor' | 'indoor'): void {
+import type { EnvironmentType } from '../core/GameStateManager';
+
+export function showStartScreen(controlMethodText: string, currentEnv: EnvironmentType): void {
   const controlDetected = document.getElementById('control-detected');
   if (controlDetected) {
     controlDetected.innerHTML = controlMethodText;
@@ -17,6 +19,7 @@ export function showStartScreen(controlMethodText: string, currentEnv: 'outdoor'
 
   document.getElementById('btn-env-outdoor')?.classList.toggle('active', currentEnv === 'outdoor');
   document.getElementById('btn-env-indoor')?.classList.toggle('active', currentEnv === 'indoor');
+  document.getElementById('btn-env-train')?.classList.toggle('active', currentEnv === 'train');
 
   document.getElementById('screen-start')?.classList.remove('hidden');
   document.getElementById('screen-gameover')?.classList.add('hidden');

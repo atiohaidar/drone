@@ -4,11 +4,13 @@
  */
 import { buildScene } from './world/SceneBuilder';
 import { InputManager } from './core/InputManager';
-import { GameStateManager, formatTime } from './core/GameStateManager';
+import { StickMode } from './core/ControlMode';
+import { GameStateManager, formatTime, EnvironmentType } from './core/GameStateManager';
 import { DronePhysics } from './drone/DronePhysics';
 import { buildDroneModel, DroneModelData } from './drone/DroneModel';
 import { buildOutdoorEnvironment } from './world/OutdoorEnvironment';
 import { buildIndoorEnvironment } from './world/IndoorEnvironment';
+import { buildTrainEnvironment, TrainEnvironmentData } from './world/TrainEnvironment';
 import { buildCheckpoints, updateCheckpointHighlight, checkCheckpointTrigger, CheckpointData } from './world/Checkpoints';
 import { CameraController } from './drone/CameraController';
 import { CollisionSystem, CollisionStructure, BeamData, CrateCollider } from './drone/CollisionSystem';
@@ -30,6 +32,7 @@ let pathLines: LinesMesh | null = null;
 let collisionStructures: CollisionStructure[] = [];
 let collisionBeams: BeamData[] = [];
 let crateColliders: CrateCollider[] = [];
+let activeTrainData: TrainEnvironmentData | null = null;
 
 // Smoothed Camera Pitch holder (passed by reference)
 const smoothedCameraPitch = { value: 0 };
@@ -73,6 +76,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const orientationGuard = new OrientationGuard();
   inputManager.setTouchController(touchController);
 
+  // Initialize Stick Mode HUD & Listeners
+  hud.updateStickMode(inputManager.stickMode);
+  inputManager.onStickModeChange((mode) => {
+    hud.updateStickMode(mode);
+  });
+
   // 2. Build drone model
   const droneModel = buildDroneModel(sceneCtx.scene, sceneCtx.shadowGenerator);
   if (droneModel.root) {
@@ -82,8 +91,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // 3. Environment building helper
-  function loadEnvironment(env: 'outdoor' | 'indoor') {
-    // Clean up old environment node
+  function loadEnvironment(env: EnvironmentType) {
+    // Clean up old environment node & dynamic train
+    if (activeTrainData) {
+      activeTrainData.dispose();
+      activeTrainData = null;
+    }
     if (activeEnvironmentNode) {
       activeEnvironmentNode.dispose();
       activeEnvironmentNode = null;
@@ -106,8 +119,14 @@ window.addEventListener('DOMContentLoaded', () => {
       collisionStructures = data.structures;
       collisionBeams = data.beams;
       crateColliders = [];
-    } else {
+    } else if (env === 'indoor') {
       const data = buildIndoorEnvironment(sceneCtx.scene, activeEnvironmentNode, sceneCtx.shadowGenerator);
+      collisionStructures = data.structures;
+      collisionBeams = data.beams;
+      crateColliders = data.crates;
+    } else {
+      const data = buildTrainEnvironment(sceneCtx.scene, activeEnvironmentNode, sceneCtx.shadowGenerator);
+      activeTrainData = data;
       collisionStructures = data.structures;
       collisionBeams = data.beams;
       crateColliders = data.crates;
@@ -199,6 +218,26 @@ window.addEventListener('DOMContentLoaded', () => {
     touchController.toggle();
   });
 
+  // Stick Mode Switcher (Top HUD Navigation Button)
+  document.getElementById('btn-control-mode')?.addEventListener('click', () => {
+    const nextMode = ((inputManager.stickMode % 4) + 1) as StickMode;
+    inputManager.setStickMode(nextMode);
+  });
+
+  // Stick Mode Switcher (Start Screen Buttons)
+  document.querySelectorAll('.stick-mode-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const mode = parseInt(btn.getAttribute('data-mode') || '2', 10) as StickMode;
+      inputManager.setStickMode(mode);
+    });
+  });
+
+  // Stick Mode Switcher (Legend Badge Click)
+  document.getElementById('legend-mode-badge')?.addEventListener('click', () => {
+    const nextMode = ((inputManager.stickMode % 4) + 1) as StickMode;
+    inputManager.setStickMode(nextMode);
+  });
+
   // Mini OSD Battery Unlimited / Normal Drain Toggle
   document.getElementById('hud-mini-osd')?.addEventListener('click', () => {
     const isDrain = physics.toggleBatteryDrain();
@@ -227,6 +266,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const btnEnvOutdoor = document.getElementById('btn-env-outdoor');
   const btnEnvIndoor = document.getElementById('btn-env-indoor');
+  const btnEnvTrain = document.getElementById('btn-env-train');
 
   btnEnvOutdoor?.addEventListener('click', () => {
     stateManager.setEnvironment('outdoor');
@@ -236,6 +276,11 @@ window.addEventListener('DOMContentLoaded', () => {
   btnEnvIndoor?.addEventListener('click', () => {
     stateManager.setEnvironment('indoor');
     loadEnvironment('indoor');
+  });
+
+  btnEnvTrain?.addEventListener('click', () => {
+    stateManager.setEnvironment('train');
+    loadEnvironment('train');
   });
 
   function resetGame() {
@@ -280,6 +325,11 @@ window.addEventListener('DOMContentLoaded', () => {
     hud.updateInputs(inputManager.inputs);
     hud.updateTelemetry(physics.velocity.length(), Math.max(0, physics.position.y), inputManager.inputs.yaw * 8);
     hud.updateMiniOSD(physics.droneBattery, !physics.isBatteryDrainEnabled, physics.getCompassHeadingString());
+
+    // Update animated train if in Train Chase environment
+    if (activeTrainData) {
+      crateColliders = activeTrainData.update(dt);
+    }
 
     // Update physics
     const damage = physics.update(

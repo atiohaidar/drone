@@ -2,6 +2,7 @@
  * HUD manager for the overlay UI elements (dials, input bars, shield health, etc.).
  */
 import type { InputState } from '../core/InputManager';
+import { StickMode, STICK_MODE_CONFIGS } from '../core/ControlMode';
 
 export class HUD {
   private barThr: HTMLElement | null;
@@ -21,6 +22,14 @@ export class HUD {
   private osdBatteryBadge: HTMLElement | null;
   private osdCompassVal: HTMLElement | null;
 
+  private legendModeBadge: HTMLElement | null;
+  private legendKeyThrottle: HTMLElement | null;
+  private legendKeyYaw: HTMLElement | null;
+  private legendKeyPitch: HTMLElement | null;
+  private legendKeyRoll: HTMLElement | null;
+  private hudStickModeText: HTMLElement | null;
+  private stickModeSummary: HTMLElement | null;
+
   constructor() {
     this.barThr = document.getElementById('bar-thr');
     this.valThr = document.getElementById('val-thr');
@@ -38,6 +47,14 @@ export class HUD {
     this.osdBatteryVal = document.getElementById('osd-battery-val');
     this.osdBatteryBadge = document.getElementById('osd-battery-badge');
     this.osdCompassVal = document.getElementById('osd-compass-val');
+
+    this.legendModeBadge = document.getElementById('legend-mode-badge');
+    this.legendKeyThrottle = document.getElementById('legend-key-throttle');
+    this.legendKeyYaw = document.getElementById('legend-key-yaw');
+    this.legendKeyPitch = document.getElementById('legend-key-pitch');
+    this.legendKeyRoll = document.getElementById('legend-key-roll');
+    this.hudStickModeText = document.getElementById('hud-stick-mode-text');
+    this.stickModeSummary = document.getElementById('stick-mode-summary');
   }
 
   private setDialProgress(card: HTMLElement | undefined, value: number, maxValue: number): void {
@@ -102,5 +119,24 @@ export class HUD {
     if (this.healthPct) {
       this.healthPct.innerText = `${Math.round(health)}%`;
     }
+  }
+
+  /** Update Controls Legend and Stick Mode indicators. */
+  public updateStickMode(mode: StickMode): void {
+    const cfg = STICK_MODE_CONFIGS[mode];
+    if (this.legendModeBadge) this.legendModeBadge.innerText = `MODE ${mode}`;
+    if (this.hudStickModeText) this.hudStickModeText.innerText = `Mode ${mode}`;
+    if (this.stickModeSummary) this.stickModeSummary.innerText = cfg.summary;
+
+    if (this.legendKeyThrottle) this.legendKeyThrottle.innerText = cfg.legend.throttle;
+    if (this.legendKeyYaw) this.legendKeyYaw.innerText = cfg.legend.yaw;
+    if (this.legendKeyPitch) this.legendKeyPitch.innerText = cfg.legend.pitch;
+    if (this.legendKeyRoll) this.legendKeyRoll.innerText = cfg.legend.roll;
+
+    // Update active class on start screen mode buttons
+    document.querySelectorAll('.stick-mode-btn').forEach((el) => {
+      const btnMode = parseInt(el.getAttribute('data-mode') || '0', 10);
+      el.classList.toggle('active', btnMode === mode);
+    });
   }
 }

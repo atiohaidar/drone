@@ -64,6 +64,15 @@
           </svg>
           <span class="btn-text">Touch Controls</span>
         </button>
+        <button class="btn" id="btn-control-mode" title="Change Transmitter Stick Mode (Mode 1, 2, 3, 4)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+            <circle cx="6" cy="12" r="2"></circle>
+            <circle cx="18" cy="12" r="2"></circle>
+            <path d="M12 10v4"></path>
+          </svg>
+          <span class="btn-text" id="hud-stick-mode-text">Mode 2</span>
+        </button>
         <button class="btn" id="btn-dashboard" title="Flight Dashboard">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -165,22 +174,25 @@
 
       <!-- Right Controls Legend -->
       <div class="glass-panel legend-panel">
-        <h2>Controls Legend</h2>
-        <div class="legend-row">
-          <span>Throttle (Climb/Desc)</span>
-          <span class="legend-key">W / S (Left Stick Y)</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h2 style="margin: 0; font-size: 0.95rem;">Controls Legend</h2>
+          <span class="legend-mode-badge" id="legend-mode-badge">MODE 2</span>
         </div>
         <div class="legend-row">
-          <span>Yaw (Rotate Left/Right)</span>
-          <span class="legend-key">A / D (Left Stick X)</span>
+          <span id="legend-lbl-throttle">Throttle (Climb/Desc)</span>
+          <span class="legend-key" id="legend-key-throttle">W / S (Left Stick Y)</span>
         </div>
         <div class="legend-row">
-          <span>Pitch (Forward/Back)</span>
-          <span class="legend-key">↑ / ↓ (Right Stick Y)</span>
+          <span id="legend-lbl-yaw">Yaw (Rotate Left/Right)</span>
+          <span class="legend-key" id="legend-key-yaw">A / D (Left Stick X)</span>
         </div>
         <div class="legend-row">
-          <span>Roll (Strafe Left/Right)</span>
-          <span class="legend-key">← / → (Right Stick X)</span>
+          <span id="legend-lbl-pitch">Pitch (Forward/Back)</span>
+          <span class="legend-key" id="legend-key-pitch">↑ / ↓ (Right Stick Y)</span>
+        </div>
+        <div class="legend-row">
+          <span id="legend-lbl-roll">Roll (Strafe Left/Right)</span>
+          <span class="legend-key" id="legend-key-roll">← / → (Right Stick X)</span>
         </div>
         <div class="legend-row">
           <span>Camera Gimbal Tilt</span>
@@ -204,10 +216,10 @@
       <div class="modal-logo">🚀</div>
       <h2 class="modal-title">Obstacle <span>Course Challenge</span></h2>
       <p class="modal-desc">
-        Pilot the 3D quadcopter drone through the sequence of checkpoints. Keyboard fallback uses W/S throttle, A/D yaw,
-        arrows for pitch and roll, and Q/E for camera gimbal tilt.
+        Pilot the 3D quadcopter drone through the sequence of checkpoints. Keyboard fallback uses W/S, A/D,
+        and arrow keys depending on your selected Stick Mode.
       </p>
-      <div class="modal-stats" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
+      <div class="modal-stats" style="grid-template-columns: 1fr 1fr; margin-bottom: 14px;">
         <div class="stat-item"
           style="text-align: center; border-right: 1px solid rgba(15, 23, 42, 0.05); padding-right: 10px;">
           <span class="stat-lbl">Control Method</span>
@@ -217,13 +229,28 @@
         <div class="stat-item"
           style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-left: 10px;">
           <span class="stat-lbl" style="margin-bottom: 6px;">Select Arena</span>
-          <div style="display: flex; gap: 8px; justify-content: center;">
-            <button class="btn active" id="btn-env-outdoor" style="padding: 6px 12px; font-size: 0.75rem;">🏞️
-              Outdoor</button>
-            <button class="btn" id="btn-env-indoor" style="padding: 6px 12px; font-size: 0.75rem;">🏠 Indoor</button>
+          <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn active" id="btn-env-outdoor" style="padding: 6px 10px; font-size: 0.75rem;">🏞️ Outdoor</button>
+            <button class="btn" id="btn-env-indoor" style="padding: 6px 10px; font-size: 0.75rem;">🏠 Indoor</button>
+            <button class="btn" id="btn-env-train" style="padding: 6px 10px; font-size: 0.75rem;">🚂 Train Chase</button>
           </div>
         </div>
       </div>
+
+      <!-- Transmitter Stick Mode Selector -->
+      <div class="stat-item stick-mode-selection-item" style="text-align: center; margin-bottom: 18px; padding: 10px 14px; background: rgba(15, 23, 42, 0.03); border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.06);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span class="stat-lbl" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Transmitter Stick Mode</span>
+          <span id="stick-mode-summary" style="font-size: 0.75rem; font-weight: 600; color: var(--primary);">Left: Throttle/Yaw | Right: Pitch/Roll</span>
+        </div>
+        <div class="stick-mode-btn-group" id="stick-mode-selector">
+          <button class="btn stick-mode-btn" data-mode="1" title="Mode 1: Left Stick (Pitch/Yaw), Right Stick (Throttle/Roll)">Mode 1</button>
+          <button class="btn stick-mode-btn active" data-mode="2" title="Mode 2 (Default): Left Stick (Throttle/Yaw), Right Stick (Pitch/Roll)">Mode 2</button>
+          <button class="btn stick-mode-btn" data-mode="3" title="Mode 3: Left Stick (Pitch/Roll), Right Stick (Throttle/Yaw)">Mode 3</button>
+          <button class="btn stick-mode-btn" data-mode="4" title="Mode 4: Left Stick (Throttle/Roll), Right Stick (Pitch/Yaw)">Mode 4</button>
+        </div>
+      </div>
+
       <button class="btn btn-primary btn-large" id="btn-start">Start Flight</button>
     </div>
   </div>

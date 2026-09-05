@@ -36,7 +36,26 @@ export const indoorCheckpoints: CheckpointDef[] = [
   { x: 0, y: 3, z: 0 }
 ];
 
-export type EnvironmentType = 'outdoor' | 'indoor';
+export const trainCheckpoints: CheckpointDef[] = [
+  { x: 45, y: 3.5, z: 85 },     // Gate 1: S1 Departure swerve right
+  { x: 95, y: 4.5, z: 45 },     // Gate 2: S1 Chicane cut left
+  { x: 140, y: 6.5, z: 80 },    // Gate 3: S1 Canyon ramp right
+  { x: 235, y: 18.0, z: -25 },  // Gate 4: Viaduct climb swerve left
+  { x: 275, y: 24.5, z: -95 },  // Gate 5: Viaduct High Apex swerve right (24m!)
+  { x: 240, y: 20.5, z: -165 }, // Gate 6: Viaduct descent onto cliff left
+  { x: 210, y: 15.0, z: -280 }, // Gate 7: Mountain gorge hairpin left
+  { x: 15, y: 10.0, z: -290 },  // Gate 8: Tunnel Entrance arch portal
+  { x: -55, y: 9.0, z: -325 },  // Gate 9: Inside Mountain Tunnel curve
+  { x: -125, y: 8.0, z: -285 }, // Gate 10: Tunnel Exit leap
+  { x: -225, y: 5.0, z: -275 }, // Gate 11: Serpentine River hard right
+  { x: -265, y: 4.0, z: -210 }, // Gate 12: Serpentine River cut left
+  { x: -305, y: 3.5, z: -135 }, // Gate 13: Riverbank sweeping bend
+  { x: -220, y: 6.0, z: 125 },  // Gate 14: Dense Pine Forest slalom
+  { x: -200, y: 9.0, z: 225 },  // Gate 15: North Ridge climb
+  { x: 50, y: 3.0, z: 130 }     // Gate 16: Final chicane to station
+];
+
+export type EnvironmentType = 'outdoor' | 'indoor' | 'train';
 
 export class GameStateManager {
   public state: GameState = 'MENU';
@@ -48,7 +67,9 @@ export class GameStateManager {
 
   /** Get the checkpoint list for the current environment. */
   get courseCheckpoints(): CheckpointDef[] {
-    return this.activeEnvironment === 'outdoor' ? outdoorCheckpoints : indoorCheckpoints;
+    if (this.activeEnvironment === 'outdoor') return outdoorCheckpoints;
+    if (this.activeEnvironment === 'indoor') return indoorCheckpoints;
+    return trainCheckpoints;
   }
 
   /** Start or restart the game. */
@@ -117,6 +138,7 @@ export class GameStateManager {
 
     document.getElementById('btn-env-outdoor')?.classList.toggle('active', env === 'outdoor');
     document.getElementById('btn-env-indoor')?.classList.toggle('active', env === 'indoor');
+    document.getElementById('btn-env-train')?.classList.toggle('active', env === 'train');
   }
 
   /** Check if the game is currently playable. */

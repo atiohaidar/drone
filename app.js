@@ -33,6 +33,34 @@ let inputs = {
     btn_rtbh: 0
 };
 
+// Transmitter Stick Mode configuration (Mode 1 - 4)
+let stickMode = parseInt(localStorage.getItem('drone_stick_mode') || '2', 10);
+if (![1, 2, 3, 4].includes(stickMode)) stickMode = 2;
+
+const STICK_MODES = {
+    1: { leftV: 'pitch', leftH: 'yaw', rightV: 'throttle', rightH: 'roll', leftTitle: 'LEFT STICK (Pitch / Yaw)', rightTitle: 'RIGHT STICK (Throttle / Roll)', legendL: '<strong>Left Stick:</strong> Pitch / Yaw (W, S / A, D)', legendR: '<strong>Right Stick:</strong> Throttle / Roll (Up, Down / Left, Right)' },
+    2: { leftV: 'throttle', leftH: 'yaw', rightV: 'pitch', rightH: 'roll', leftTitle: 'LEFT STICK (Throttle / Yaw)', rightTitle: 'RIGHT STICK (Pitch / Roll)', legendL: '<strong>Left Stick:</strong> Throttle / Yaw (W, S / A, D)', legendR: '<strong>Right Stick:</strong> Pitch / Roll (Up, Down / Left, Right)' },
+    3: { leftV: 'pitch', leftH: 'roll', rightV: 'throttle', rightH: 'yaw', leftTitle: 'LEFT STICK (Pitch / Roll)', rightTitle: 'RIGHT STICK (Throttle / Yaw)', legendL: '<strong>Left Stick:</strong> Pitch / Roll (W, S / A, D)', legendR: '<strong>Right Stick:</strong> Throttle / Yaw (Up, Down / Left, Right)' },
+    4: { leftV: 'throttle', leftH: 'roll', rightV: 'pitch', rightH: 'yaw', leftTitle: 'LEFT STICK (Throttle / Roll)', rightTitle: 'RIGHT STICK (Pitch / Yaw)', legendL: '<strong>Left Stick:</strong> Throttle / Roll (W, S / A, D)', legendR: '<strong>Right Stick:</strong> Pitch / Yaw (Up, Down / Left, Right)' }
+};
+
+function setDashboardStickMode(mode) {
+    stickMode = mode;
+    localStorage.setItem('drone_stick_mode', mode.toString());
+    const cfg = STICK_MODES[mode] || STICK_MODES[2];
+    const leftTitleEl = document.getElementById('vis-left-stick-title');
+    const rightTitleEl = document.getElementById('vis-right-stick-title');
+    const legendLEl = document.getElementById('dash-legend-left');
+    const legendREl = document.getElementById('dash-legend-right');
+    const selectEl = document.getElementById('dash-stick-mode');
+    if (leftTitleEl) leftTitleEl.innerText = cfg.leftTitle;
+    if (rightTitleEl) rightTitleEl.innerText = cfg.rightTitle;
+    if (legendLEl) legendLEl.innerHTML = cfg.legendL;
+    if (legendREl) legendREl.innerHTML = cfg.legendR;
+    if (selectEl) selectEl.value = mode.toString();
+}
+window.setDashboardStickMode = setDashboardStickMode;
+
 // Keyboard state for demo mode
 let keys = {};
 
@@ -79,6 +107,7 @@ window.onload = function() {
     initDateTimeUpdater();
     initKeyboardListeners();
     initRealtimeChart(); // Initialize new scrolling visualizer chart
+    setDashboardStickMode(stickMode);
     startSimulatorLoop();
     updateAnalytics();
     
@@ -174,21 +203,29 @@ function updateInputsFromKeyboard() {
     inputs.pitch = 0.0;
     inputs.roll = 0.0;
 
-    // Left Stick: Throttle (climb/descend) using W/S
-    if (keys['KeyW']) inputs.throttle = 0.6;
-    if (keys['KeyS']) inputs.throttle = -0.6;
+    // Left hand: W/S (Vertical), A/D (Horizontal)
+    let leftY = 0.0;
+    if (keys['KeyW']) leftY = 0.6;
+    if (keys['KeyS']) leftY = -0.6;
 
-    // Left Stick: Yaw (heading rotation) using A/D
-    if (keys['KeyA']) inputs.yaw = -0.5;
-    if (keys['KeyD']) inputs.yaw = 0.5;
+    let leftX = 0.0;
+    if (keys['KeyA']) leftX = -0.5;
+    if (keys['KeyD']) leftX = 0.5;
 
-    // Right Stick: Pitch (forward/back) using ArrowUp/ArrowDown
-    if (keys['ArrowUp']) inputs.pitch = 0.7;
-    if (keys['ArrowDown']) inputs.pitch = -0.7;
+    // Right hand: ArrowUp/Down (Vertical), ArrowLeft/Right (Horizontal)
+    let rightY = 0.0;
+    if (keys['ArrowUp']) rightY = 0.7;
+    if (keys['ArrowDown']) rightY = -0.7;
 
-    // Right Stick: Roll (strafe left/right) using ArrowLeft/ArrowRight
-    if (keys['ArrowLeft']) inputs.roll = -0.7;
-    if (keys['ArrowRight']) inputs.roll = 0.7;
+    let rightX = 0.0;
+    if (keys['ArrowLeft']) rightX = -0.7;
+    if (keys['ArrowRight']) rightX = 0.7;
+
+    const cfg = STICK_MODES[stickMode] || STICK_MODES[2];
+    inputs[cfg.leftV] = leftY;
+    inputs[cfg.leftH] = leftX;
+    inputs[cfg.rightV] = rightY;
+    inputs[cfg.rightH] = rightX;
 
     // Camera Tilt Dial using Q/E
     if (keys['KeyQ']) inputs.camera = Math.max(-1.0, inputs.camera - 0.05);
@@ -418,11 +455,17 @@ function connectWebSocket() {
         try {
             const data = JSON.parse(event.data);
             
-            // Map inputs from WebSocket packet
-            inputs.throttle = data.throttle;
-            inputs.yaw = data.yaw;
-            inputs.pitch = data.pitch;
-            inputs.roll = data.roll;
+            // Map inputs from WebSocket packet based on active Stick Mode
+            const rawLeftY = data.throttle;
+            const rawLeftX = data.yaw;
+            const rawRightY = data.pitch;
+            const rawRightX = data.roll;
+
+            const cfg = STICK_MODES[stickMode] || STICK_MODES[2];
+            inputs[cfg.leftV] = rawLeftY;
+            inputs[cfg.leftH] = rawLeftX;
+            inputs[cfg.rightV] = rawRightY;
+            inputs[cfg.rightH] = rawRightX;
             inputs.camera = data.camera;
             
             // Check button state transitions for event logging

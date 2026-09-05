@@ -1,8 +1,4 @@
-/**
- * Mobile Touch Controller — Dual Virtual Joysticks (Mode 2) & Action Buttons.
- * Left Stick: Throttle (Up/Down) & Yaw (Left/Right)
- * Right Stick: Pitch (Up/Down -> Forward/Backward) & Roll (Left/Right -> Strafe)
- */
+import { StickMode, STICK_MODE_CONFIGS, getSavedStickMode } from '../core/ControlMode';
 
 export interface TouchInputState {
   throttle: number; // -1 to 1
@@ -25,12 +21,15 @@ export class TouchController {
 
   public isEnabled = false;
   public activeTouchCount = 0;
+  public stickMode: StickMode = getSavedStickMode();
 
   private container: HTMLElement | null = null;
   private leftRing: HTMLElement | null = null;
   private leftKnob: HTMLElement | null = null;
   private rightRing: HTMLElement | null = null;
   private rightKnob: HTMLElement | null = null;
+  private leftLabelEl: HTMLElement | null = null;
+  private rightLabelEl: HTMLElement | null = null;
 
   // Stick state
   private leftPointerId: number | null = null;
@@ -117,22 +116,22 @@ export class TouchController {
     this.container.style.display = 'none';
 
     this.container.innerHTML = `
-      <!-- Left Virtual Joystick (Mode 2: Throttle / Yaw) -->
+      <!-- Left Virtual Joystick -->
       <div class="touch-stick-wrapper left-stick-wrapper" id="touch-left-wrapper">
         <div class="stick-ring" id="touch-left-ring">
           <div class="stick-axis-cross"></div>
           <div class="stick-knob" id="touch-left-knob"></div>
         </div>
-        <div class="stick-label">THROTTLE / YAW</div>
+        <div class="stick-label" id="touch-left-label">THROTTLE / YAW</div>
       </div>
 
-      <!-- Right Virtual Joystick (Mode 2: Pitch / Roll) -->
+      <!-- Right Virtual Joystick -->
       <div class="touch-stick-wrapper right-stick-wrapper" id="touch-right-wrapper">
         <div class="stick-ring" id="touch-right-ring">
           <div class="stick-axis-cross"></div>
           <div class="stick-knob" id="touch-right-knob"></div>
         </div>
-        <div class="stick-label">PITCH / ROLL</div>
+        <div class="stick-label" id="touch-right-label">PITCH / ROLL</div>
       </div>
 
       <!-- Quick Mobile Action Buttons Bar -->
@@ -161,6 +160,21 @@ export class TouchController {
     this.leftKnob = document.getElementById('touch-left-knob');
     this.rightRing = document.getElementById('touch-right-ring');
     this.rightKnob = document.getElementById('touch-right-knob');
+    this.leftLabelEl = document.getElementById('touch-left-label');
+    this.rightLabelEl = document.getElementById('touch-right-label');
+    this.updateLabels();
+  }
+
+  public setStickMode(mode: StickMode): void {
+    this.stickMode = mode;
+    this.resetInputs();
+    this.updateLabels();
+  }
+
+  public updateLabels(): void {
+    const cfg = STICK_MODE_CONFIGS[this.stickMode];
+    if (this.leftLabelEl) this.leftLabelEl.innerText = cfg.leftLabel;
+    if (this.rightLabelEl) this.rightLabelEl.innerText = cfg.rightLabel;
   }
 
   private bindEvents(): void {
@@ -268,15 +282,16 @@ export class TouchController {
       ring.releasePointerCapture(e.pointerId);
     }
 
+    const cfg = STICK_MODE_CONFIGS[this.stickMode];
     if (side === 'left') {
       this.leftPointerId = null;
-      this.inputs.throttle = 0;
-      this.inputs.yaw = 0;
+      this.inputs[cfg.leftVertical] = 0;
+      this.inputs[cfg.leftHorizontal] = 0;
       if (this.leftKnob) this.leftKnob.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
     } else {
       this.rightPointerId = null;
-      this.inputs.pitch = 0;
-      this.inputs.roll = 0;
+      this.inputs[cfg.rightVertical] = 0;
+      this.inputs[cfg.rightHorizontal] = 0;
       if (this.rightKnob) this.rightKnob.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
     }
 
@@ -308,12 +323,13 @@ export class TouchController {
     normX = this.applyStickResponse(normX);
     normY = this.applyStickResponse(normY);
 
+    const cfg = STICK_MODE_CONFIGS[this.stickMode];
     if (side === 'left') {
-      this.inputs.yaw = -normX;      // Right (+knobX) -> -yaw (turns Right)
-      this.inputs.throttle = normY;  // Down (-knobY) / Up (+knobY)
+      this.inputs[cfg.leftHorizontal] = -normX;
+      this.inputs[cfg.leftVertical] = normY;
     } else {
-      this.inputs.roll = -normX;     // Right (+knobX) -> -roll (rolls Right)
-      this.inputs.pitch = normY;     // Backward (-knobY) / Forward (+knobY)
+      this.inputs[cfg.rightHorizontal] = -normX;
+      this.inputs[cfg.rightVertical] = normY;
     }
   }
 

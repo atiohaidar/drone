@@ -72,8 +72,13 @@ export class DronePhysics {
   reset(environment: EnvironmentType): void {
     if (environment === 'indoor') {
       this.position.set(0, 2, 40);
+      this.heading = 0;
+    } else if (environment === 'train') {
+      this.position.set(0, 4.5, 52);
+      this.heading = 0;
     } else {
       this.position.set(0, 5, 0);
+      this.heading = 0;
     }
     this.velocity.set(0, 0, 0);
     this.heading = 0;
@@ -118,17 +123,17 @@ export class DronePhysics {
       this.droneBattery = 100.0;
     }
 
-    // DJI Mavic Mini 1 Specs mapped to Force/Drag engine
+    // DJI FPV / Mavic Specs mapped to Force/Drag engine
     let yawRate = 2.27; // ~130 deg/s (P Mode)
-    let maxAccelXY = 14.4; // 8 m/s max horiz * 1.8 drag
+    let maxAccelXY = 18.0; // 10 m/s max horiz * 1.8 drag (~36 km/h, matches train cruising speed)
     let maxClimbAccel = 5.4; // 3 m/s * 1.8 drag
     let maxDescAccel = 5.4; // 3 m/s * 1.8 drag
     
     if (this.flightMode === 'S') {
-        yawRate = 2.62; // ~150 deg/s
-        maxAccelXY = 23.4; // 13 m/s max horiz * 1.8
-        maxClimbAccel = 7.2; // 4 m/s * 1.8
-        maxDescAccel = 5.4; 
+        yawRate = 3.14; // ~180 deg/s (Agile Sport yaw)
+        maxAccelXY = 34.2; // 19 m/s max horiz * 1.8 drag (~68 km/h, easily overtakes train!)
+        maxClimbAccel = 9.0; // 5 m/s climb
+        maxDescAccel = 7.2; // 4 m/s dive
     } else if (this.flightMode === 'C') {
         yawRate = 0.52; // ~30 deg/s
         maxAccelXY = 7.2; // 4 m/s max horiz * 1.8
